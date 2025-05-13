@@ -1,5 +1,6 @@
 import type { CoreMessage } from 'ai'
-import { client } from './client'
+
+import { client } from '@/lib/slack'
 
 export async function getThread(
   channel_id: string,

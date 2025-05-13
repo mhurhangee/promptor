@@ -1,6 +1,6 @@
+import { mrkdwn } from '@/lib/slack'
 import { openai } from '@ai-sdk/openai'
 import { type CoreMessage, generateText } from 'ai'
-import { mrkdwn } from '../slack/mrkdwn'
 
 export const generateResponse = async (
   messages: CoreMessage[],

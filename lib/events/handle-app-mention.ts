@@ -1,40 +1,25 @@
+import { generateResponse } from '@/lib/ai'
+import { thinkingMessages } from '@/lib/config'
+import { getThread, updateMessageUtil } from '@/lib/slack'
+import { getRandomItem } from '@/lib/utils'
 import type { AppMentionEvent } from '@slack/web-api'
-import { generateResponse } from '../ai/generate-response'
-import { client, getThread } from '../slack'
-
-const updateStatusUtil = async (initialStatus: string, event: AppMentionEvent) => {
-  const initialMessage = await client.chat.postMessage({
-    channel: event.channel,
-    thread_ts: event.thread_ts ?? event.ts,
-    text: initialStatus,
-  })
-
-  if (!initialMessage || !initialMessage.ts) throw new Error('Failed to post initial message')
-
-  const updateMessage = async (status: string) => {
-    await client.chat.update({
-      channel: event.channel,
-      ts: initialMessage.ts as string,
-      text: status,
-    })
-  }
-  return updateMessage
-}
 
 export async function handleNewAppMention(event: AppMentionEvent, botUserId: string) {
-  console.log('Handling app mention')
+  // Exclude bot messages and your own bot (TODO: should this be done in the event handler?)
   if (event.bot_id || event.bot_id === botUserId || event.bot_profile) {
-    console.log('Skipping app mention')
     return
   }
 
+  // Get thread and post thinking message
   const { thread_ts, channel } = event
-  const updateMessage = await updateStatusUtil('is thinking...', event)
+  const updateMessage = await updateMessageUtil(getRandomItem(thinkingMessages), event)
 
+  // If thread exists, get thread and generate response
   if (thread_ts) {
     const messages = await getThread(channel, thread_ts, botUserId)
     const result = await generateResponse(messages, updateMessage)
     await updateMessage(result)
+    // If no thread exists, create a new thread and generate response
   } else {
     const result = await generateResponse([{ role: 'user', content: event.text }], updateMessage)
     await updateMessage(result)

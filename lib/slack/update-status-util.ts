@@ -1,4 +1,4 @@
-import { client } from './client'
+import { client } from '@/lib/slack'
 
 export const updateStatusUtil = (channel: string, thread_ts: string) => {
   return async (status: string) => {
