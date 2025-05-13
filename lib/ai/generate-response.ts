@@ -1,21 +1,27 @@
-import { openai } from '@ai-sdk/openai'
 import { type CoreMessage, generateText } from 'ai'
-import { mrkdwn } from '../slack/mrkdwn'
+
+import { AI_CONFIG, THINKING_MESSAGES } from '../config'
+import { mrkdwn } from '../slack'
+import { getRandomItem } from '../utils'
 
 export const generateResponse = async (
   messages: CoreMessage[],
   updateStatus?: (status: string) => void
 ) => {
-  updateStatus?.('is thinking...')
+  // Update status to thinking
+  updateStatus?.(getRandomItem(THINKING_MESSAGES))
+
+  // Generate response
   const { text } = await generateText({
-    model: openai('gpt-4o'),
-    system: `You are a Slack bot assistant Keep your responses concise and to the point.
-    - Do not tag users.
-    - Current date is: ${new Date().toISOString().split('T')[0]}
-    - Make sure to ALWAYS include sources in your final response if you use web search. Put sources inline if possible.`,
+    model: AI_CONFIG.model,
+    system: AI_CONFIG.system,
+    maxRetries: AI_CONFIG.maxRetries,
+    maxTokens: AI_CONFIG.maxTokens,
+    temperature: AI_CONFIG.temperature,
     messages,
   })
 
+  // Update status to done
   updateStatus?.('')
 
   // Convert markdown to Slack mrkdwn format

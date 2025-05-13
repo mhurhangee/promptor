@@ -1,4 +1,5 @@
 import type { CoreMessage } from 'ai'
+
 import { client } from './client'
 
 export async function getThread(

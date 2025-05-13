@@ -1,32 +1,21 @@
 import type { AssistantThreadStartedEvent, GenericMessageEvent } from '@slack/web-api'
-import { generateResponse } from '../ai/generate-response'
-import { client, getThread, updateStatusUtil } from '../slack'
+
+import { generateResponse } from '../ai'
+import { INITIAL_FOLLOWUPS, WELCOME_MESSAGES } from '../config'
+import { client, getThread, setFollowupsUtil, updateStatusUtil } from '../slack'
+import { getRandomItem, getRandomItems } from '../utils'
 
 export async function assistantThreadMessage(event: AssistantThreadStartedEvent) {
   const { channel_id, thread_ts } = event.assistant_thread
-  console.log(`Thread started: ${channel_id} ${thread_ts}`)
-  console.log(JSON.stringify(event))
 
   await client.chat.postMessage({
     channel: channel_id,
     thread_ts: thread_ts,
-    text: "Hello, I'm an AI assistant built with the AI SDK by Vercel!",
+    text: getRandomItem(WELCOME_MESSAGES),
   })
 
-  await client.assistant.threads.setSuggestedPrompts({
-    channel_id: channel_id,
-    thread_ts: thread_ts,
-    prompts: [
-      {
-        title: 'Get the weather',
-        message: 'What is the current weather in London?',
-      },
-      {
-        title: 'Get the news',
-        message: 'What is the latest Premier League news from the BBC?',
-      },
-    ],
-  })
+  // Set 3 random initial followups
+  await setFollowupsUtil(channel_id, thread_ts)(getRandomItems(INITIAL_FOLLOWUPS, 3))
 }
 
 export async function handleNewAssistantMessage(event: GenericMessageEvent, botUserId: string) {

@@ -1,5 +1,7 @@
 # Promptor - AI-tutor slackbot
 
+Based on [AI SDK Slackbot](https://github.com/vercel-labs/ai-sdk-slackbot)
+
 ## Quick setup
 
 1. Clone the repository
@@ -13,6 +15,28 @@ SLACK_SIGNING_SECRET=your-slack-signing-secret
 OPENAI_API_KEY=your-openai-api-key
 ```
 
-## Changes
+## Tech stack
+- Slack web-api
+- AI SDK
+- TypeScript
+- Vercel
+- Biome
+- Husky
+- Lint-staged
 
-See [ROADMAP](ROADMAP.md)
+## Roadmap/changes
+- ✅ Add example `manifest.json`
+- ✅ Add home tab
+- ✅ Add formatting and linting (using biome)
+- ✅ Add pre-commit hooks (using lint-staged and husky)
+- ✅ Add markdown conversion for responses (using slackify-markdown)
+- ✅ Refactor codebase to be more modular
+- ✅ Add `/lib/config` to enable easy configuration of assistant
+- ✅ Add randomisation of welcome messages, thinking messages, followup titles and initial followups
+- ✅ Remove exa and weather tools
+- ✅ Improve assistant message handling in line with usage in slack/bolt.js
+- ⬜ Add image and file upload support
+- ⬜ Add support for web search
+- ⬜ Add support for AI-generated followup messages
+- ⬜ Add support for AI-generated titles
+

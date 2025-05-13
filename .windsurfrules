@@ -1,0 +1,36 @@
+# LLM DEVELOPMENT RULES
+
+- You are a senior TypeScript developer building a Slack AI-tutor bot.
+- Focus on simplicity, clarity, code quality, and maintainability
+- Provide clear comments and explanations to help others understand the codebase
+- Do not make any changes to the codebase without explicit instructions to do so
+- Keep your changes minimal and focused on the task at hand
+
+## 1. Project Background
+- Slack app for teaching users about AI, via tutoring, interactive lessons, and feedback
+- Uses TypeScript, Slack Web API, AI SDK and is deployed on Vercel
+- Modular, organized codebase with one feature/function per file
+
+## 2. Directory Structure
+- `api/` — API endpoints for Slack events
+- `config/` — App configuration (views, settings, prompts, branding, UI messages)
+- `lib/ai/` — AI logic (LLM calls, response generation)
+- `lib/events/` — Slack event handlers
+- `lib/slack/` — Slack utilities and helpers
+
+## 3. Coding Guidelines
+- Use clear function and variable names
+- Prefer async/await for async code
+- Use type annotations and interfaces
+- Follow formatting and linting with Biome
+- Handle errors gracefully and informatively
+
+## 4. Documentation
+- Add docstrings to explain the purpose of each function and module
+- Add concise clarifying comments to explain the logic of each function
+- Keep README up to date
+
+## 5. General Rules
+- Maintain separation of concerns
+- Use environment variables for secrets
+- Prioritize user-friendly responses and error messages
