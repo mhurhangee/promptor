@@ -8,4 +8,5 @@ export const AI_CONFIG = {
   maxRetries: 2,
   maxTokens: 5000,
   temperature: 0.7,
+  maxMessagesInThread: 50, // Used in getThread
 }
