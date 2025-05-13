@@ -1,5 +1,5 @@
 import { openai } from '@ai-sdk/openai'
-import { openaiWebSearch } from '../ai'
+import { createWebSearchTool } from '../tools'
 
 export type OpenAIWebSearchSettings = {
   searchContextSize: 'low' | 'medium' | 'high' | undefined
@@ -45,7 +45,13 @@ export const AI_CONFIG = {
   maxTokens: 5000,
   temperature: 0.7,
   maxSteps: 5,
-  tools: { openaiWebSearch },
+  tools: {
+    openaiWebSearch: createWebSearchTool({
+      searchContextSize: 'medium',
+      country: 'GB',
+      region: 'England',
+    }),
+  },
   maxMessagesInThread: 50, // Used in getThread
   openaiWebSearchSettings: {
     // Used in OpenAI's web search tool
