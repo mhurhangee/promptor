@@ -29,7 +29,7 @@ export const RESPONSE_SCHEMA = z.object({
           "A potential follow-up question the user might ask next, written from the user's perspective. Start with a relevant emoji."
         )
     )
-    .optional()
+    .nullable()
     .describe(
       'A list of follow-up prompts to keep the conversation going. Optional but helpful for promoting curiosity.'
     ),

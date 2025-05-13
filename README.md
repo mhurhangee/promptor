@@ -45,5 +45,6 @@ OPENAI_API_KEY=your-openai-api-key
 - ⬜ Add support for AI-generated titles
 - ⬜ Add support for AI-generated message titles
 - ⬜ Better error handling for generate response
+- ⬜ Switchable personalities
 
 
