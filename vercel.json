@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "https://github.com/mhurhangee/ai-sdk-slackbot"
+    }
+  ],
+  "functions": {
+    "api/events.ts": {
+      "maxDuration": 60
+    }
+  },
+  "outputDirectory": "dist"
+}

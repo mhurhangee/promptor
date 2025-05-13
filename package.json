@@ -1,0 +1,36 @@
+{
+  "name": "ai-sdk-slackbot",
+  "version": "1.0.0",
+  "description": "AI SDK Slackbot",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "format": "biome format --write .",
+    "lint": "biome lint .",
+    "check": "biome check --write .",
+    "prepare": "husky"
+  },
+  "keywords": ["ai-sdk", "slackbot"],
+  "author": "m.hurhangee@me.com",
+  "license": "MIT",
+  "dependencies": {
+    "@ai-sdk/openai": "^1.3.22",
+    "@slack/web-api": "^7.9.1",
+    "@vercel/functions": "^2.0.3",
+    "ai": "^4.3.15",
+    "openai": "^4.98.0",
+    "slackify-markdown": "^4.4.0",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/node": "^20.17.46",
+    "husky": "9.1.7",
+    "lint-staged": "16.0.0",
+    "typescript": "^5.8.3"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,md}": ["biome format --write .", "biome check --write ."]
+  }
+}
