@@ -1,3 +1,5 @@
+// DISABLED for as I don't think it is relevant to Promptor use case
+
 import type { AppMentionEvent } from '@slack/web-api'
 import { generateResponse } from '../ai'
 import { THINKING_MESSAGES } from '../config'
