@@ -4,8 +4,6 @@ import { client, getThread, updateStatusUtil } from '../slack'
 
 export async function assistantThreadMessage(event: AssistantThreadStartedEvent) {
   const { channel_id, thread_ts } = event.assistant_thread
-  console.log(`Thread started: ${channel_id} ${thread_ts}`)
-  console.log(JSON.stringify(event))
 
   await client.chat.postMessage({
     channel: channel_id,
