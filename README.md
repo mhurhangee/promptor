@@ -3,7 +3,7 @@
 ## Quick setup
 
 1. Clone the repository
-2. Create a new Slack app and install it to your workspace
+2. Create a new Slack app (`manifest.json`) and install it to your workspace
 3. Deploy to Vercel
 4. Add the following environment variables to your Vercel project:
 
