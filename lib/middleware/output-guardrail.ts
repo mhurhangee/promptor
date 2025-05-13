@@ -1,8 +1,8 @@
-import type { LanguageModelV1, LanguageModelV1Middleware } from 'ai'
+import type { LanguageModelV1Middleware } from 'ai'
 import { generateObject } from 'ai'
 import { z } from 'zod'
 
-import { AI_CONFIG } from '../config'
+import { CHECKS } from '../config'
 
 /**
  * Schema for output check response
@@ -30,13 +30,10 @@ export const createOutputGuardrailMiddleware = (): LanguageModelV1Middleware => 
       try {
         // Check if the generated text is appropriate and relevant
         const checkResult = await generateObject({
-          model: AI_CONFIG.model,
+          model: CHECKS.model,
+          temperature: CHECKS.temperature,
           schema: OUTPUT_CHECK_SCHEMA,
-          system: `You are a content moderator for an AI tutor bot named Promptor that teaches users about AI concepts.
-Your job is to determine if the AI's response is appropriate, helpful, and relevant.
-If the response contains harmful, offensive, or inappropriate content, mark it as not appropriate.
-If the response is completely off-topic or unhelpful for an educational AI assistant, mark it as not appropriate.
-Be strict in your evaluation - the AI should be providing helpful, educational content related to AI topics.`,
+          system: CHECKS.outputGuardrailSystem,
           messages: [
             {
               role: 'user',

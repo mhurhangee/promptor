@@ -1,7 +1,7 @@
 import type { CoreMessage } from 'ai'
 import { type GenerateObjectResult, generateObject } from 'ai'
 import { z } from 'zod'
-import { AI_CONFIG } from '../config'
+import { CHECKS } from '../config'
 import type { PreflightCheckResult } from './run-preflight-check'
 
 const RELEVANCY_SCHEMA = z.object({
@@ -17,10 +17,11 @@ export async function checkRelevancy(messages: CoreMessage[]): Promise<Preflight
 
     // Use generateObject to check relevancy
     const result: GenerateObjectResult<typeof RELEVANCY_SCHEMA._type> = await generateObject({
-      model: AI_CONFIG.model,
+      model: CHECKS.model,
       schema: RELEVANCY_SCHEMA,
-      system: AI_CONFIG.relevancySystem,
+      system: CHECKS.relevancySystem,
       messages: lastMessages,
+      temperature: CHECKS.temperature,
     })
 
     console.log('==> relevancy result', result.object)
