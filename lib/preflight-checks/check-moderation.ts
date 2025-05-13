@@ -21,21 +21,22 @@ export async function checkModeration(messages: CoreMessage[]): Promise<Prefligh
       return { passed: true }
     }
 
-    const inputs: Array<{ text?: string; image_url?: { url: string } }> = []
+    const inputs: Array<{ type: string; text?: string; image_url?: { url: string } }> = []
 
     // Process the content based on its type
     if (typeof lastMessage.content === 'string') {
       // Handle simple text message
-      inputs.push({ text: lastMessage.content })
+      inputs.push({ type: 'text', text: lastMessage.content })
     } else if (Array.isArray(lastMessage.content)) {
       // Handle content parts (text and images)
       for (const part of lastMessage.content) {
         if (part.type === 'text') {
-          inputs.push({ text: part.text })
+          inputs.push({ type: 'text', text: part.text })
         } else if (part.type === 'image') {
           // Convert base64 to data URL for image moderation
           const dataUrl = `data:image/jpeg;base64,${part.image}`
           inputs.push({
+            type: 'image_url',
             image_url: { url: dataUrl },
           })
         }
@@ -48,6 +49,13 @@ export async function checkModeration(messages: CoreMessage[]): Promise<Prefligh
       return { passed: true }
     }
 
+    // Log the request payload for debugging
+    const requestPayload = {
+      model: 'omni-moderation-latest',
+      input: inputs,
+    }
+    console.log('==> Moderation API Request:', JSON.stringify(requestPayload, null, 2))
+
     // Call OpenAI moderation API directly using fetch
     const response = await fetch('https://api.openai.com/v1/moderations', {
       method: 'POST',
@@ -55,9 +63,7 @@ export async function checkModeration(messages: CoreMessage[]): Promise<Prefligh
         'Content-Type': 'application/json',
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
-      body: JSON.stringify({
-        input: inputs,
-      }),
+      body: JSON.stringify(requestPayload),
     })
 
     if (!response.ok) {
