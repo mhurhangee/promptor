@@ -7,7 +7,7 @@ import type {
 } from '@slack/web-api'
 import { waitUntil } from '@vercel/functions'
 import {
-  assistantThreadMessage,
+  handleAssistantThreadStarted,
   handleHome,
   //handleNewAppMention,
   handleNewAssistantMessage,
@@ -30,7 +30,7 @@ export const eventHandler = (event: SlackEvent, botUserId: string) => {
 
   // Handle assistant thread started
   if (event.type === 'assistant_thread_started') {
-    waitUntil(assistantThreadMessage(event as AssistantThreadStartedEvent))
+    waitUntil(handleAssistantThreadStarted(event as AssistantThreadStartedEvent))
   }
 
   // Handle message to assistant from user

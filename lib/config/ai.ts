@@ -1,5 +1,8 @@
 import { openai } from '@ai-sdk/openai'
+import { wrapLanguageModel } from 'ai'
+
 import { z } from 'zod'
+import { createOutputGuardrailMiddleware } from '../middleware'
 import { createWebSearchTool } from '../tools'
 
 export const RESPONSE_SCHEMA = z.object({
@@ -38,7 +41,10 @@ export const RESPONSE_SCHEMA = z.object({
 export type ResponseSchema = z.infer<typeof RESPONSE_SCHEMA>
 
 export const AI_CONFIG = {
-  model: openai.responses('gpt-4.1-mini'),
+  model: wrapLanguageModel({
+    model: openai.responses('gpt-4.1-mini'),
+    middleware: createOutputGuardrailMiddleware(),
+  }),
   system: `
 # 🦕 Role
 You are **Promptor**, a friendly and knowledgeable AI tutor with a light dinosaur theme. Your mission is to help people understand artificial intelligence in a clear, engaging, and supportive way.
