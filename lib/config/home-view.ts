@@ -1,5 +1,5 @@
-import { contextList } from '@/lib/slack'
 import type { HomeView } from '@slack/web-api'
+import { contextList } from '../slack'
 
 // 2. Quick Start section using contextList
 const quickStart = {

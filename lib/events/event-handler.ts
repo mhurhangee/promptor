@@ -1,10 +1,3 @@
-import {
-  assistantThreadMessage,
-  handleHome,
-  handleNewAppMention,
-  handleNewAssistantMessage,
-  isAssistantMessage,
-} from '@/lib/events'
 import type {
   AppHomeOpenedEvent,
   AppMentionEvent,
@@ -13,6 +6,13 @@ import type {
   SlackEvent,
 } from '@slack/web-api'
 import { waitUntil } from '@vercel/functions'
+import {
+  assistantThreadMessage,
+  handleHome,
+  handleNewAppMention,
+  handleNewAssistantMessage,
+  isAssistantMessage,
+} from '../events'
 
 // Handle events
 export const eventHandler = (event: SlackEvent, botUserId: string) => {

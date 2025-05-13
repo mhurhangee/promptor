@@ -1,6 +1,6 @@
 import type { HomeView } from '@slack/web-api'
 
-import { client } from '@/lib/slack'
+import { client } from './client'
 
 export const publishView = async (userId: string, view: HomeView) => {
   try {

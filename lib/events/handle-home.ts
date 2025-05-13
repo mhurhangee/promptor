@@ -1,6 +1,6 @@
-import { homeView } from '@/lib/config'
-import { publishView } from '@/lib/slack'
 import type { AppHomeOpenedEvent } from '@slack/web-api'
+import { homeView } from '../config'
+import { publishView } from '../slack'
 
 // Handle home tab
 export const handleHome = async (event: AppHomeOpenedEvent) => {

@@ -1,6 +1,6 @@
 import type { AppMentionEvent } from '@slack/web-api'
 
-import { client } from '@/lib/slack'
+import { client } from './client'
 
 export const updateMessageUtil = async (initialStatus: string, event: AppMentionEvent) => {
   const initialMessage = await client.chat.postMessage({

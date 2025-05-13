@@ -1,9 +1,9 @@
 import type { AssistantThreadStartedEvent, GenericMessageEvent } from '@slack/web-api'
 
-import { generateResponse } from '@/lib/ai'
-import { INITIAL_FOLLOWUPS, WELCOME_MESSAGES } from '@/lib/config'
-import { client, getThread, setFollowupsUtil, updateStatusUtil } from '@/lib/slack'
-import { getRandomItem, getRandomItems } from '@/lib/utils'
+import { generateResponse } from '../ai'
+import { INITIAL_FOLLOWUPS, WELCOME_MESSAGES } from '../config'
+import { client, getThread, setFollowupsUtil, updateStatusUtil } from '../slack'
+import { getRandomItem, getRandomItems } from '../utils'
 
 export async function assistantThreadMessage(event: AssistantThreadStartedEvent) {
   const { channel_id, thread_ts } = event.assistant_thread

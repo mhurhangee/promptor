@@ -1,6 +1,6 @@
-import { FOLLOWUP_TITLES } from '@/lib/config'
-import { client } from '@/lib/slack'
-import { getRandomItem } from '@/lib/utils'
+import { FOLLOWUP_TITLES } from '../config'
+import { getRandomItem } from '../utils'
+import { client } from './client'
 
 export const setFollowupsUtil = (channel: string, thread_ts: string) => {
   return async (promptTexts: string[], title: string = getRandomItem(FOLLOWUP_TITLES)) => {

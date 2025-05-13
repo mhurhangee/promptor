@@ -1,4 +1,4 @@
-import { client } from '@/lib/slack'
+import { client } from './client'
 
 export const getBotId = async () => {
   const { user_id: botUserId } = await client.auth.test()

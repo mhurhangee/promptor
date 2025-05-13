@@ -1,8 +1,8 @@
 import { type CoreMessage, generateText } from 'ai'
 
-import { AI_CONFIG, THINKING_MESSAGES } from '@/lib/config'
-import { mrkdwn } from '@/lib/slack'
-import { getRandomItem } from '@/lib/utils'
+import { AI_CONFIG, THINKING_MESSAGES } from '../config'
+import { mrkdwn } from '../slack'
+import { getRandomItem } from '../utils'
 
 export const generateResponse = async (
   messages: CoreMessage[],

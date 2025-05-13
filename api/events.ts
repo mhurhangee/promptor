@@ -1,6 +1,6 @@
-import { eventHandler } from '@/lib/events'
-import { getBotId, verifyRequest } from '@/lib/slack'
 import type { SlackEvent } from '@slack/web-api'
+import { eventHandler } from '../lib/events'
+import { getBotId, verifyRequest } from '../lib/slack'
 
 export async function POST(request: Request) {
   const rawBody = await request.text()

@@ -1,8 +1,8 @@
-import { generateResponse } from '@/lib/ai'
-import { THINKING_MESSAGES } from '@/lib/config'
-import { getThread, updateMessageUtil } from '@/lib/slack'
-import { getRandomItem } from '@/lib/utils'
 import type { AppMentionEvent } from '@slack/web-api'
+import { generateResponse } from '../ai'
+import { THINKING_MESSAGES } from '../config'
+import { getThread, updateMessageUtil } from '../slack'
+import { getRandomItem } from '../utils'
 
 export async function handleNewAppMention(event: AppMentionEvent, botUserId: string) {
   // Exclude bot messages and your own bot (TODO: should this be done in the event handler?)
