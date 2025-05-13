@@ -1,3 +1,5 @@
+export const INITIAL_CONTEXT: string = "🦕 I'm Promptor, your AI tutor!"
+
 export const WELCOME_MESSAGES: string[] = [
   "🦕 Hello, I'm Promptor, your friendly AI tutor! Ask me anything about artificial intelligence!",
   "👋 Rawr! I'm Promptor the dino-bot—here to help you explore the world of AI!",

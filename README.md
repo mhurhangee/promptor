@@ -40,6 +40,10 @@ OPENAI_API_KEY=your-openai-api-key
 - ✅ Remove boilerplate messages from get thread
 - ✅ Add support for web search
 - ✅ Improved system prompt
+- ⬜ Add moderation (for input and output)
 - ⬜ Add support for AI-generated followup messages
 - ⬜ Add support for AI-generated titles
+- ⬜ Add support for AI-generated message titles
+- ⬜ Better error handling for generate response
+
 
