@@ -1,7 +1,7 @@
 {
-  "name": "ai-sdk-slackbot",
+  "name": "promptor",
   "version": "1.0.0",
-  "description": "AI SDK Slackbot",
+  "description": "AI-tutor slackbot",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
@@ -11,7 +11,7 @@
     "check": "biome check --write .",
     "prepare": "husky"
   },
-  "keywords": ["ai-sdk", "slackbot"],
+  "keywords": ["ai-tutor", "slackbot"],
   "author": "m.hurhangee@me.com",
   "license": "MIT",
   "dependencies": {
