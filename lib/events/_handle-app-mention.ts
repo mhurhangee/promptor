@@ -18,7 +18,7 @@ export async function handleNewAppMention(event: AppMentionEvent, botUserId: str
 
   // If thread exists, get thread and generate response
   if (thread_ts) {
-    const messages = await getThread(channel, thread_ts, botUserId)
+    const messages = await getThread(channel, thread_ts) // Used to include botUserId
     const result = await generateResponse(messages, updateMessage)
     await updateMessage(result)
     // If no thread exists, create a new thread and generate response
