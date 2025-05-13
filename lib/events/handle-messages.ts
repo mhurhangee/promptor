@@ -19,12 +19,15 @@ export async function assistantThreadMessage(event: AssistantThreadStartedEvent)
 }
 
 export async function handleNewAssistantMessage(event: GenericMessageEvent, botUserId: string) {
+  // Exclude bot messages and your own bot
   if (event.bot_id || event.bot_id === botUserId || event.bot_profile || !event.thread_ts) return
 
   const { thread_ts, channel } = event
   const updateStatus = updateStatusUtil(channel, thread_ts)
 
-  const messages = await getThread(channel, thread_ts, botUserId)
+  const messages = await getThread(channel, thread_ts)
+  console.log('📖 messages', messages)
+
   const result = await generateResponse(messages, updateStatus)
 
   await client.chat.postMessage({

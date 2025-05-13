@@ -35,8 +35,11 @@ OPENAI_API_KEY=your-openai-api-key
 - ✅ Add randomisation of welcome messages, thinking messages, followup titles and initial followups
 - ✅ Remove exa and weather tools
 - ✅ Improve assistant message handling in line with usage in slack/bolt.js
-- ⬜ Add image and file upload support
-- ⬜ Add support for web search
+- ✅ Disable app mentions to focus on assistant threads
+- ✅ Add image and file upload support
+- ✅ Remove boilerplate messages from get thread
+- ✅ Add support for web search
+- ✅ Improved system prompt
 - ⬜ Add support for AI-generated followup messages
 - ⬜ Add support for AI-generated titles
 

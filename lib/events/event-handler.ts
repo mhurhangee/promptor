@@ -1,6 +1,6 @@
 import type {
   AppHomeOpenedEvent,
-  AppMentionEvent,
+  //AppMentionEvent,
   AssistantThreadStartedEvent,
   GenericMessageEvent,
   SlackEvent,
@@ -9,7 +9,7 @@ import { waitUntil } from '@vercel/functions'
 import {
   assistantThreadMessage,
   handleHome,
-  handleNewAppMention,
+  //handleNewAppMention,
   handleNewAssistantMessage,
   isAssistantMessage,
 } from '../events'
@@ -21,10 +21,12 @@ export const eventHandler = (event: SlackEvent, botUserId: string) => {
     waitUntil(handleHome(event as AppHomeOpenedEvent))
   }
 
-  // Handle app mention
-  if (event.type === 'app_mention') {
-    waitUntil(handleNewAppMention(event as AppMentionEvent, botUserId))
-  }
+  /* DISABLED
+  //Handle app mention
+  //if (event.type === 'app_mention') {
+  //  waitUntil(handleNewAppMention(event as AppMentionEvent, botUserId))
+  //}
+  */
 
   // Handle assistant thread started
   if (event.type === 'assistant_thread_started') {

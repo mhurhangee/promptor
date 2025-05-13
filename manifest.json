@@ -1,6 +1,8 @@
 {
   "display_information": {
-    "name": "Promptor"
+    "name": "Promptor",
+    "description": "Friendly tutor about all things AI",
+    "background_color": "#1d7c00"
   },
   "features": {
     "app_home": {
@@ -17,18 +19,19 @@
     "scopes": {
       "bot": [
         "assistant:write",
-        "app_mentions:read",
         "chat:write",
         "im:history",
         "im:read",
-        "im:write"
+        "im:write",
+        "files:read",
+        "files:write"
       ]
     }
   },
   "settings": {
     "event_subscriptions": {
       "request_url": "https://your-deployed-app.vercel.app/api/events",
-      "bot_events": ["app_home_opened", "app_mention", "assistant_thread_started", "message.im"]
+      "bot_events": ["app_home_opened", "assistant_thread_started", "message.im"]
     },
     "org_deploy_enabled": false,
     "socket_mode_enabled": false,

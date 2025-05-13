@@ -1,3 +1,5 @@
+// Mainly used for app mentions, which is currently disabled, but left here for future use
+
 import type { AppMentionEvent } from '@slack/web-api'
 
 import { client } from './client'

@@ -6,7 +6,7 @@ const quickStart = {
   title: '⚡ *Quick Start*',
   items: [
     '💬 *DM Promptor* to get instant help',
-    '🔄 *Mention* `@Promptor` in any channel',
+    //'🔄 *Mention* `@Promptor` in any channel', DISABLED
     '📎 *Pin Promptor* to your sidebar for quick access',
   ],
 }
