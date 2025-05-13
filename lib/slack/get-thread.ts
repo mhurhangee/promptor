@@ -104,5 +104,8 @@ export async function getThread(channel_id: string, thread_ts: string): Promise<
     }
   }
 
-  return result
+  // Skip the first two messages which are boilerplate:
+  // 1. "New Assistant Thread" (from Slack)
+  // 2. The welcome message from the bot
+  return result.length >= 2 ? result.slice(2) : result
 }
