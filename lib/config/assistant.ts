@@ -1,4 +1,4 @@
-export const welcomeMessages: string[] = [
+export const WELCOME_MESSAGES: string[] = [
   "🦕 Hello, I'm Promptor, your friendly AI tutor! Ask me anything about artificial intelligence!",
   "👋 Rawr! I'm Promptor the dino-bot—here to help you explore the world of AI!",
   "🧠 Need help with AI? I'm Promptor, your prehistoric pal with modern knowledge!",
@@ -11,7 +11,7 @@ export const welcomeMessages: string[] = [
   "🧬 Evolved to educate — I'm Promptor, ready to help you understand AI, one question at a time!",
 ]
 
-export const thinkingMessages: string[] = [
+export const THINKING_MESSAGES: string[] = [
   '🦕 Thinking hard... like a dino solving a puzzle!',
   '💭 Just chewing on your question... metaphorically, of course!',
   '⏳ Let me dig up a good answer from the fossil record of AI knowledge...',
@@ -24,7 +24,7 @@ export const thinkingMessages: string[] = [
   '🌋 Brewing up a response in the data lava pit!',
 ]
 
-export const initialFollowups = [
+export const INITIAL_FOLLOWUPS: string[] = [
   "🧠 What can AI do that humans can't?",
   '🤖 How does ChatGPT actually work?',
   '📘 Can you explain machine learning in simple terms?',
@@ -42,7 +42,7 @@ export const initialFollowups = [
   '🌐 What are large language models?',
 ]
 
-export const followupTitles = [
+export const FOLLOWUP_TITLES: string[] = [
   '🦕 Curious? Try asking one of these!',
   '🧠 Fuel your brain with a quick question:',
   '🔍 Let’s dig into something interesting:',

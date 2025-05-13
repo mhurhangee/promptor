@@ -1,5 +1,5 @@
 import { generateResponse } from '@/lib/ai'
-import { thinkingMessages } from '@/lib/config'
+import { THINKING_MESSAGES } from '@/lib/config'
 import { getThread, updateMessageUtil } from '@/lib/slack'
 import { getRandomItem } from '@/lib/utils'
 import type { AppMentionEvent } from '@slack/web-api'
@@ -12,7 +12,7 @@ export async function handleNewAppMention(event: AppMentionEvent, botUserId: str
 
   // Get thread and post thinking message
   const { thread_ts, channel } = event
-  const updateMessage = await updateMessageUtil(getRandomItem(thinkingMessages), event)
+  const updateMessage = await updateMessageUtil(getRandomItem(THINKING_MESSAGES), event)
 
   // If thread exists, get thread and generate response
   if (thread_ts) {

@@ -1,7 +1,7 @@
 import type { AssistantThreadStartedEvent, GenericMessageEvent } from '@slack/web-api'
 
 import { generateResponse } from '@/lib/ai'
-import { initialFollowups, welcomeMessages } from '@/lib/config'
+import { INITIAL_FOLLOWUPS, WELCOME_MESSAGES } from '@/lib/config'
 import { client, getThread, setFollowupsUtil, updateStatusUtil } from '@/lib/slack'
 import { getRandomItem, getRandomItems } from '@/lib/utils'
 
@@ -11,11 +11,11 @@ export async function assistantThreadMessage(event: AssistantThreadStartedEvent)
   await client.chat.postMessage({
     channel: channel_id,
     thread_ts: thread_ts,
-    text: getRandomItem(welcomeMessages),
+    text: getRandomItem(WELCOME_MESSAGES),
   })
 
   // Set 3 random initial followups
-  await setFollowupsUtil(channel_id, thread_ts)(getRandomItems(initialFollowups, 3))
+  await setFollowupsUtil(channel_id, thread_ts)(getRandomItems(INITIAL_FOLLOWUPS, 3))
 }
 
 export async function handleNewAssistantMessage(event: GenericMessageEvent, botUserId: string) {
