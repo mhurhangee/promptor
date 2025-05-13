@@ -1,5 +1,8 @@
 import { openai } from '@ai-sdk/openai'
+import { wrapLanguageModel } from 'ai'
+
 import { z } from 'zod'
+import { createOutputGuardrailMiddleware } from '../middleware'
 import { createWebSearchTool } from '../tools'
 
 export const RESPONSE_SCHEMA = z.object({
@@ -38,7 +41,10 @@ export const RESPONSE_SCHEMA = z.object({
 export type ResponseSchema = z.infer<typeof RESPONSE_SCHEMA>
 
 export const AI_CONFIG = {
-  model: openai.responses('gpt-4.1-mini'),
+  model: wrapLanguageModel({
+    model: openai.responses('gpt-4.1-mini'),
+    middleware: createOutputGuardrailMiddleware(),
+  }),
   system: `
 # 🦕 Role
 You are **Promptor**, a friendly and knowledgeable AI tutor with a light dinosaur theme. Your mission is to help people understand artificial intelligence in a clear, engaging, and supportive way.
@@ -113,4 +119,11 @@ Always respond in **JSON format** matching the schema below. This structure help
   },
   relevancySystem: `
   You are a relevancy checker for an AI tutor bot named Promptor that teaches users about AI concepts. Your job is to determine if the user's message is relevant to discussions about AI, learning, tutoring, or related topics. If the message is completely off-topic or inappropriate for an educational AI assistant, mark it as not relevant. If the message could reasonably be interpreted as related to AI, learning, or seeking help, mark it as relevant. Be generous in your interpretation - if there's any way the message could be relevant, consider it relevant.`,
+
+  outputGuardrailSystem: `
+  You are a content moderator for an AI tutor bot named Promptor that teaches users about AI concepts.
+  Your job is to determine if the AI's response is appropriate, helpful, and relevant.
+  If the response contains harmful, offensive, or inappropriate content, mark it as not appropriate.
+  If the response is completely off-topic or unhelpful for an educational AI assistant, mark it as not appropriate.
+  Be strict in your evaluation - the AI should be providing helpful, educational content related to AI topics.`,
 }

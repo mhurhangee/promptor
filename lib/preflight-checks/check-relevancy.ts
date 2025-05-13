@@ -23,6 +23,8 @@ export async function checkRelevancy(messages: CoreMessage[]): Promise<Preflight
       messages: lastMessages,
     })
 
+    console.log('==> relevancy result', result.object)
+
     if (!result.object.relevant) {
       return {
         passed: false,

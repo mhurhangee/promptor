@@ -8,6 +8,7 @@ interface ModerationResponse {
     flagged: boolean
     categories: Record<string, boolean>
     category_scores: Record<string, number>
+    category_applied_input_types?: Record<string, string[]>
   }>
 }
 
@@ -65,8 +66,14 @@ export async function checkModeration(messages: CoreMessage[]): Promise<Prefligh
 
     const moderation = (await response.json()) as ModerationResponse
 
+    // Log the moderation response for debugging
+    console.log('==> Moderation API Response:', JSON.stringify(moderation, null, 2))
+
     // Check if any input was flagged
     const flagged = moderation.results.some((result) => result.flagged)
+
+    // Log the flagged status
+    console.log('==> Content flagged:', flagged)
 
     if (flagged) {
       // Create a redacted version of the message
