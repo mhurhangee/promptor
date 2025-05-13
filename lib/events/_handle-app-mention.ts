@@ -1,5 +1,6 @@
-// DISABLED for as I don't think it is relevant to Promptor use case
-
+// DISABLED for as I don't think it is relevant to Promptor use case. Kept for future reference
+// However, it is a good example of how to handle app mentions
+/*
 import type { AppMentionEvent } from '@slack/web-api'
 import { generateResponse } from '../ai'
 import { THINKING_MESSAGES } from '../config'
@@ -18,7 +19,7 @@ export async function handleNewAppMention(event: AppMentionEvent, botUserId: str
 
   // If thread exists, get thread and generate response
   if (thread_ts) {
-    const messages = await getThread(channel, thread_ts) // Used to include botUserId
+    const messages = await getThread(channel, thread_ts, botUserId) // Used to include botUserId
     const result = await generateResponse(messages, updateMessage)
     await updateMessage(result)
     // If no thread exists, create a new thread and generate response
@@ -27,3 +28,4 @@ export async function handleNewAppMention(event: AppMentionEvent, botUserId: str
     await updateMessage(result)
   }
 }
+*/
