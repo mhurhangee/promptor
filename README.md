@@ -36,8 +36,10 @@ OPENAI_API_KEY=your-openai-api-key
 - ✅ Remove exa and weather tools
 - ✅ Improve assistant message handling in line with usage in slack/bolt.js
 - ✅ Disable app mentions to focus on assistant threads
-- ⬜ Add image and file upload support
-- ⬜ Add support for web search
+- ✅ Add image and file upload support
+- ✅ Remove boilerplate messages from get thread
+- ✅ Add support for web search
+- ✅ Improved system prompt
 - ⬜ Add support for AI-generated followup messages
 - ⬜ Add support for AI-generated titles
 

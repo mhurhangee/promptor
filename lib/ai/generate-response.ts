@@ -18,6 +18,8 @@ export const generateResponse = async (
     maxRetries: AI_CONFIG.maxRetries,
     maxTokens: AI_CONFIG.maxTokens,
     temperature: AI_CONFIG.temperature,
+    maxSteps: AI_CONFIG.maxSteps,
+    tools: AI_CONFIG.tools,
     messages,
   })
 

@@ -1,6 +1,8 @@
 {
   "display_information": {
-    "name": "Promptor"
+    "name": "Promptor",
+    "description": "Friendly tutor about all things AI",
+    "background_color": "#1d7c00"
   },
   "features": {
     "app_home": {
@@ -15,7 +17,15 @@
   },
   "oauth_config": {
     "scopes": {
-      "bot": ["assistant:write", "chat:write", "im:history", "im:read", "im:write"]
+      "bot": [
+        "assistant:write",
+        "chat:write",
+        "im:history",
+        "im:read",
+        "im:write",
+        "files:read",
+        "files:write"
+      ]
     }
   },
   "settings": {
