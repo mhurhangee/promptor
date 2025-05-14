@@ -1,8 +1,7 @@
-import { type CoreMessage, Output, generateText, wrapLanguageModel } from 'ai'
+import { type CoreMessage, Output, generateText } from 'ai'
 
+import { runPreflightChecks } from '../checks'
 import { AI_CONFIG, RESPONSE_SCHEMA, THINKING_MESSAGES } from '../config'
-import { createOutputGuardrailMiddleware } from '../middleware'
-import { runPreflightChecks } from '../preflight-checks'
 import { mrkdwn } from '../slack'
 import { getRandomItem } from '../utils'
 

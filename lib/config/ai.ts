@@ -2,7 +2,7 @@ import { openai } from '@ai-sdk/openai'
 import { wrapLanguageModel } from 'ai'
 
 import { z } from 'zod'
-import { createOutputGuardrailMiddleware } from '../middleware'
+import { createOutputGuardrailMiddleware } from '../checks'
 import { createWebSearchTool } from '../tools'
 
 export const RESPONSE_SCHEMA = z.object({
