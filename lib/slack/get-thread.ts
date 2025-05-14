@@ -26,6 +26,8 @@ export async function getThread(
   // Ensure we have messages
   if (!messages) throw new Error('No messages found in thread')
 
+  console.log('messages in getThread', JSON.stringify(messages, null, 2))
+
   // Process messages to convert them to CoreMessage format
   const result: CoreMessage[] = []
 
