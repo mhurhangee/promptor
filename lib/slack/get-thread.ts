@@ -8,6 +8,7 @@ import type {
 } from 'ai'
 
 import { generateTranscription } from '../ai/generate-transcription'
+import type { HeliconeTrackingData } from '../ai/helicone-utils'
 import { AI_CONFIG } from '../config'
 import { client } from './client'
 import { getFileAsBase64 } from './get-file-as-base64'
@@ -15,7 +16,8 @@ import { getFileAsBase64 } from './get-file-as-base64'
 export async function getThread(
   channel_id: string,
   thread_ts: string,
-  updateStatus?: (status: string) => void
+  updateStatus?: (status: string) => void,
+  botUserId?: string
 ): Promise<CoreMessage[]> {
   const { messages } = await client.conversations.replies({
     channel: channel_id,
@@ -103,7 +105,18 @@ export async function getThread(
               } else {
                 // No Slack transcription available, use our own
                 updateStatus?.('Transcribing audio...')
-                transcription = await generateTranscription(base64)
+
+                // Create tracking data for Helicone observability
+                const trackingData: HeliconeTrackingData = {
+                  userId: message.user || 'unknown',
+                  channelId: channel_id,
+                  threadTs: thread_ts,
+                  messageTs: message.ts || '',
+                  botId: botUserId,
+                  operation: 'fileTranscription',
+                }
+
+                transcription = await generateTranscription(base64, trackingData)
                 console.log(`Used our transcription for ${filename}`)
               }
 
