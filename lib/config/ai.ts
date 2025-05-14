@@ -1,16 +1,9 @@
-import { createOpenAI } from '@ai-sdk/openai'
 import { wrapLanguageModel } from 'ai'
+import { openaiClient } from './openai'
 
 import { z } from 'zod'
 import { createOutputGuardrailMiddleware } from '../checks'
 import { createWebSearchTool } from '../tools'
-
-const openaiClient = createOpenAI({
-  baseURL: 'https://oai.helicone.ai/v1',
-  headers: {
-    'Helicone-Auth': `Bearer ${process.env.HELICONE_API_KEY}`,
-  },
-})
 
 export const RESPONSE_SCHEMA = z.object({
   threadTitle: z
