@@ -12,7 +12,7 @@ import { experimental_transcribe as transcribe } from 'ai'
 export async function generateTranscription(audioData: string): Promise<string> {
   try {
     const transcript = await transcribe({
-      model: openai.transcription('gpt-4o-mini-transcribe'),
+      model: openai.transcription('whisper-1'),
       audio: audioData,
     })
 
