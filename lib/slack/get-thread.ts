@@ -88,11 +88,24 @@ export async function getThread(
 
             // Handle audio/video files that can be transcribed
             if (isTranscribable) {
-              // Update status to inform user
-              updateStatus?.('Transcribing audio...')
+              // Check if Slack already has a transcription
+              let transcription = ''
 
-              // Get transcription
-              const transcription = await generateTranscription(base64)
+              if (
+                file.transcription &&
+                file.transcription.status === 'complete' &&
+                file.transcription.preview &&
+                file.transcription.preview.content
+              ) {
+                // Use Slack's transcription
+                transcription = file.transcription.preview.content
+                console.log(`Using Slack's transcription for ${filename}`)
+              } else {
+                // No Slack transcription available, use our own
+                updateStatus?.('Transcribing audio...')
+                transcription = await generateTranscription(base64)
+                console.log(`Used our transcription for ${filename}`)
+              }
 
               // Find existing text part or create one
               const textPartIndex = contentParts.findIndex((part) => part.type === 'text')
