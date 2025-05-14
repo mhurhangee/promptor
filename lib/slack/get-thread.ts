@@ -7,11 +7,16 @@ import type {
   TextPart,
 } from 'ai'
 
+import { generateTranscription } from '../ai/generate-transcription'
 import { AI_CONFIG } from '../config'
 import { client } from './client'
 import { getFileAsBase64 } from './get-file-as-base64'
 
-export async function getThread(channel_id: string, thread_ts: string): Promise<CoreMessage[]> {
+export async function getThread(
+  channel_id: string,
+  thread_ts: string,
+  updateStatus?: (status: string) => void
+): Promise<CoreMessage[]> {
   const { messages } = await client.conversations.replies({
     channel: channel_id,
     ts: thread_ts,
@@ -62,23 +67,66 @@ export async function getThread(channel_id: string, thread_ts: string): Promise<
       // Process each file
       for (const file of message.files) {
         try {
-          // Only process files that are images, PDFs, or other supported types
+          // Only process files that are supported types
           if (file.id) {
             const { base64, mimeType, filename } = await getFileAsBase64(file.id)
 
-            // Determine if this is an image or other file type
-            if (mimeType.startsWith('image/')) {
+            // Check if this is an audio or video file that can be transcribed
+            const isTranscribable = [
+              'audio/mp3',
+              'audio/mp4',
+              'audio/mpeg',
+              'audio/mpga',
+              'audio/m4a',
+              'audio/wav',
+              'audio/webm',
+              'video/mp4',
+              'video/webm',
+            ].includes(mimeType)
+
+            // Handle audio/video files that can be transcribed
+            if (isTranscribable) {
+              // Update status to inform user
+              updateStatus?.('Transcribing audio...')
+
+              // Get transcription
+              const transcription = await generateTranscription(base64)
+              updateStatus?.('')
+
+              // Find existing text part or create one
+              const textPartIndex = contentParts.findIndex((part) => part.type === 'text')
+
+              if (textPartIndex >= 0) {
+                // Append to existing text part
+                const textPart = contentParts[textPartIndex] as TextPart
+                textPart.text += `\n\n[Transcription of "${filename}"]: ${transcription}`
+              } else {
+                // Create new text part
+                contentParts.push({
+                  type: 'text' as const,
+                  text: `[Transcription of "${filename}"]: ${transcription}`,
+                })
+              }
+            }
+            // Handle images
+            else if (mimeType.startsWith('image/')) {
               contentParts.push({
                 type: 'image' as const,
                 image: base64,
               })
-            } else {
+            }
+            // Handle PDFs
+            else if (mimeType === 'application/pdf') {
               contentParts.push({
                 type: 'file' as const,
                 mimeType,
                 data: base64,
                 filename,
               })
+            }
+            // Handle other file types (unsupported)
+            else {
+              console.log(`Skipping unsupported file type: ${mimeType}`)
             }
           }
         } catch (error) {

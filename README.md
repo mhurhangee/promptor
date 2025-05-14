@@ -27,6 +27,7 @@ Based on [AI SDK Slackbot](https://github.com/vercel-labs/ai-sdk-slackbot). See 
 - ✅ Add support for structured output (AI-generated followup messages and titles)
 - ✅ Error handling for generate response (basic)
 - ✅ Add moderation for input and output (OpenAI moderation & structured outputs)
+- ⬜ Image and file error handling
 - ⬜ Transcribe voice inputs
 - ⬜ Switchable personalities
 - ⬜ Tracing/analytics/monitoring
@@ -35,4 +36,5 @@ Based on [AI SDK Slackbot](https://github.com/vercel-labs/ai-sdk-slackbot). See 
 - ⬜ Token limits?
 - ⬜ Add support for AI-generated images?
 - ⬜ Reactions as feedback?
+- ⬜ Transcribe video inputs?
 
