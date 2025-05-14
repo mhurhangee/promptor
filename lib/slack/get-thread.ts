@@ -93,7 +93,6 @@ export async function getThread(
 
               // Get transcription
               const transcription = await generateTranscription(base64)
-              updateStatus?.('')
 
               // Find existing text part or create one
               const textPartIndex = contentParts.findIndex((part) => part.type === 'text')
