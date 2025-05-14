@@ -1,9 +1,16 @@
-import { openai } from '@ai-sdk/openai'
+import { createOpenAI } from '@ai-sdk/openai'
 import { wrapLanguageModel } from 'ai'
 
 import { z } from 'zod'
 import { createOutputGuardrailMiddleware } from '../checks'
 import { createWebSearchTool } from '../tools'
+
+const openaiClient = createOpenAI({
+  baseURL: 'https://oai.helicone.ai/v1',
+  headers: {
+    'Helicone-Auth': `Bearer ${process.env.HELICONE_API_KEY}`,
+  },
+})
 
 export const RESPONSE_SCHEMA = z.object({
   threadTitle: z
@@ -41,7 +48,7 @@ export const RESPONSE_SCHEMA = z.object({
 export type ResponseSchema = z.infer<typeof RESPONSE_SCHEMA>
 
 export const AI_CONFIG = {
-  audioModel: openai.transcription('whisper-1'),
+  audioModel: openaiClient.transcription('whisper-1'),
   audioProviderOptions: {
     openai: {
       language: 'en',
@@ -49,7 +56,7 @@ export const AI_CONFIG = {
     },
   },
   model: wrapLanguageModel({
-    model: openai.responses('gpt-4.1-mini'),
+    model: openaiClient.responses('gpt-4.1-mini'),
     middleware: createOutputGuardrailMiddleware(),
   }),
   system: `
