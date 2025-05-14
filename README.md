@@ -1,6 +1,6 @@
 # Promptor - AI-tutor slackbot
 
-Based on [AI SDK Slackbot](https://github.com/vercel-labs/ai-sdk-slackbot). See Roadmap for changes.
+An opinionated AI-tutor slackbot. Based on [AI SDK Slackbot](https://github.com/vercel-labs/ai-sdk-slackbot). See Roadmap for changes and features.
 
 ## Quick setup
 
@@ -28,11 +28,11 @@ Based on [AI SDK Slackbot](https://github.com/vercel-labs/ai-sdk-slackbot). See 
 - ✅ Error handling for generate response (basic)
 - ✅ Add moderation for input and output (OpenAI moderation & structured outputs)
 - ✅ Image and file error handling (basic)
-- ✅ Transcribe voice inputs
-- ✅ Transcribe video inputs
+- ✅ Transcribe voice (/video) inputs (using whisper and slack's transcription)
+- ✅ Tracing/analytics/monitoring/rate limits/caching all with Helicone
 - ⬜ Switchable personalities
-- ⬜ Tracing/analytics/monitoring
-- ⬜ Rate limits
+
+
 - ⬜ Shortcut/reaction to retry/regenerate
 - ⬜ Token limits?
 - ⬜ Add support for AI-generated images?
