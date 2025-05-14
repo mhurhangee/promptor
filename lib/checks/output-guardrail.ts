@@ -44,12 +44,26 @@ export const createOutputGuardrailMiddleware = (): LanguageModelV1Middleware => 
 
         console.log('==> checkResult', checkResult.object)
 
-        // If the response is not appropriate, replace it with a safe message
+        // If the response is not appropriate, return a properly formatted JSON response
         if (!checkResult.object.appropriate) {
           console.warn('Output guardrail triggered:', checkResult.object.reason)
+
+          // Create a properly formatted JSON response that matches the expected schema
+          const safeResponse = JSON.stringify({
+            threadTitle: '🚫 Content Moderation',
+            responseTitle: '⚠️ Content Filtered',
+            response:
+              "I apologize, but I'm unable to provide a response to that request. As an AI tutor, I'm designed to provide helpful, educational content related to AI topics. Please feel free to ask me something else about AI concepts or learning resources.",
+            followUps: [
+              '🤔 What are large language models?',
+              '📚 Can you explain neural networks?',
+              '🧠 How does machine learning work?',
+            ],
+          })
+
           return {
             ...result,
-            text: "I apologize, but I'm unable to provide a response to that request. As an AI tutor, I'm designed to provide helpful, educational content related to AI topics. Please feel free to ask me something else about AI concepts or learning resources.",
+            text: safeResponse,
           }
         }
 

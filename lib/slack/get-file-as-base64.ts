@@ -1,10 +1,6 @@
 import { client } from './client'
 
-/**
- * Fetches a file from Slack and converts it to base64
- * @param fileId The ID of the file to fetch
- * @returns Object containing base64 data, mime type, and filename
- */
+//Fetches a file from Slack and converts it to base64
 export async function getFileAsBase64(fileId: string): Promise<{
   base64: string
   mimeType: string

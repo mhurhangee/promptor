@@ -10,7 +10,7 @@ export async function handleNewAssistantMessage(event: GenericMessageEvent, botU
   const { thread_ts, channel } = event
   const updateStatus = updateStatusUtil(channel, thread_ts)
 
-  const messages = await getThread(channel, thread_ts)
+  const messages = await getThread(channel, thread_ts, updateStatus)
 
   const output = await generateResponse(messages, updateStatus)
 

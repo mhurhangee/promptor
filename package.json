@@ -11,7 +11,7 @@
     "check": "biome check --write .",
     "prepare": "husky"
   },
-  "keywords": ["ai-tutor", "slackbot"],
+  "keywords": ["ai-tutor", "slackbot", "ai-sdk", "openai", "ai", "slack"],
   "author": "m.hurhangee@me.com",
   "license": "MIT",
   "dependencies": {

@@ -2,7 +2,7 @@ import { openai } from '@ai-sdk/openai'
 import { wrapLanguageModel } from 'ai'
 
 import { z } from 'zod'
-import { createOutputGuardrailMiddleware } from '../middleware'
+import { createOutputGuardrailMiddleware } from '../checks'
 import { createWebSearchTool } from '../tools'
 
 export const RESPONSE_SCHEMA = z.object({
@@ -41,6 +41,13 @@ export const RESPONSE_SCHEMA = z.object({
 export type ResponseSchema = z.infer<typeof RESPONSE_SCHEMA>
 
 export const AI_CONFIG = {
+  audioModel: openai.transcription('whisper-1'),
+  audioProviderOptions: {
+    openai: {
+      language: 'en',
+      prompt: 'A conversation between a user and an AI tutor about AI.',
+    },
+  },
   model: wrapLanguageModel({
     model: openai.responses('gpt-4.1-mini'),
     middleware: createOutputGuardrailMiddleware(),
