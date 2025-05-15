@@ -12,8 +12,8 @@ const RELEVANCY_SCHEMA = z.object({
 //Checks if the user's message is relevant to the chatbot's purpose
 export async function checkRelevancy(messages: CoreMessage[]): Promise<PreflightCheckResult> {
   try {
-    //Check up to the last 5 messages (from the user)
-    const lastMessages = messages.slice(-5)
+    //Check up to the last 3 messages
+    const lastMessages = messages.slice(-3)
 
     // Use generateObject to check relevancy
     const result: GenerateObjectResult<typeof RELEVANCY_SCHEMA._type> = await generateObject({
@@ -23,8 +23,6 @@ export async function checkRelevancy(messages: CoreMessage[]): Promise<Preflight
       messages: lastMessages,
       temperature: CHECKS.temperature,
     })
-
-    console.log('==> relevancy result', result.object)
 
     if (!result.object.relevant) {
       return {

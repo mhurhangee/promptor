@@ -8,16 +8,20 @@ export interface PreflightCheckResult {
   redactedMessage?: CoreMessage
 }
 
-//Runs all preflight checks on the messages
+//Runs all preflight checks on the messages in parallel
 export async function runPreflightChecks(messages: CoreMessage[]): Promise<PreflightCheckResult> {
-  // Run moderation check first
-  const moderationResult = await checkModeration(messages)
+  // Run checks simultaneously
+  const [moderationResult, relevancyResult] = await Promise.all([
+    checkModeration(messages),
+    checkRelevancy(messages),
+  ])
+
+  // Check moderation result first
   if (!moderationResult.passed) {
     return moderationResult
   }
 
-  // Run relevancy check if moderation passed
-  const relevancyResult = await checkRelevancy(messages)
+  // Then check relevancy result
   if (!relevancyResult.passed) {
     return relevancyResult
   }

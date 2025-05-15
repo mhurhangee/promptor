@@ -13,20 +13,11 @@ import { type HeliconeTrackingData, generateHeliconeHeaders } from './helicone-u
  */
 export async function generateTranscription(
   audioData: string,
-  trackingData?: HeliconeTrackingData
+  trackingData: HeliconeTrackingData
 ): Promise<string> {
   try {
     // Generate Helicone tracking headers if tracking data is provided
-    const heliconeHeaders = trackingData
-      ? generateHeliconeHeaders(
-          {
-            ...trackingData,
-            operation: 'generateTranscription',
-          },
-          true,
-          false
-        ) // Enable caching, disable rate limiting for transcription
-      : {}
+    const heliconeHeaders = generateHeliconeHeaders(trackingData, true, false) // Enable caching, disable rate limiting for transcription
 
     const transcript = await transcribe({
       model: AI_CONFIG.audioModel,

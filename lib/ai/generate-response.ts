@@ -10,8 +10,8 @@ import { type HeliconeTrackingData, generateHeliconeHeaders } from './helicone-u
 
 export const generateResponse = async (
   messages: CoreMessage[],
-  updateStatus?: (status: string) => void,
-  trackingData?: HeliconeTrackingData
+  trackingData: HeliconeTrackingData,
+  updateStatus?: (status: string) => void
 ) => {
   // Update status to thinking
   updateStatus?.(getRandomItem(THINKING_MESSAGES))
@@ -34,25 +34,14 @@ export const generateResponse = async (
       }
     }
 
-    // If the message was redacted, use the redacted version
-    const processedMessages = preflightResult.redactedMessage
-      ? [...messages.slice(0, -1), preflightResult.redactedMessage]
-      : messages
-
     // Update status to thinking
     updateStatus?.(getRandomItem(THINKING_MESSAGES))
 
+    // Set operation for Helicone tracking
+    trackingData.operation = 'generateResponse'
+
     // Generate Helicone tracking headers if tracking data is provided
-    const heliconeHeaders = trackingData
-      ? generateHeliconeHeaders(
-          {
-            ...trackingData,
-            operation: 'generateResponse',
-          },
-          true,
-          true
-        ) // Enable caching and rate limiting
-      : {}
+    const heliconeHeaders = generateHeliconeHeaders(trackingData, true, true) // Enable caching and rate limiting
 
     // Generate response with guardrails
     const { experimental_output: output } = await generateText({
@@ -64,18 +53,17 @@ export const generateResponse = async (
       maxSteps: AI_CONFIG.maxSteps,
       tools: AI_CONFIG.tools,
       experimental_output: Output.object({ schema: RESPONSE_SCHEMA }),
-      messages: processedMessages,
+      messages: messages,
       headers: heliconeHeaders,
     })
 
     // Update status to done
     updateStatus?.('')
 
-    // Convert markdown to Slack mrkdwn format
     return {
       threadTitle: output.threadTitle,
       responseTitle: output.responseTitle,
-      response: mrkdwn(output.response),
+      response: mrkdwn(output.response), // Convert markdown to Slack mrkdwn format
       followUps: output.followUps,
     }
   } catch (error) {
@@ -83,7 +71,7 @@ export const generateResponse = async (
     return {
       threadTitle: 'Please start a new thread',
       responseTitle: '🚧 I have gone (temporarily) extinct',
-      response: mrkdwn('🥺 I was unable to generate a response. Please try again.'),
+      response: '🥺 I was unable to generate a response. Please try again.',
       followUps: null,
     }
   }

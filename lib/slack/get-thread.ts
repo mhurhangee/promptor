@@ -16,8 +16,11 @@ import { getFileAsBase64 } from './get-file-as-base64'
 export async function getThread(
   channel_id: string,
   thread_ts: string,
+  trackingData: HeliconeTrackingData,
   updateStatus?: (status: string) => void
 ): Promise<CoreMessage[]> {
+  updateStatus?.(' is reading the thread...')
+
   const { messages } = await client.conversations.replies({
     channel: channel_id,
     ts: thread_ts,
@@ -27,21 +30,17 @@ export async function getThread(
   // Ensure we have messages
   if (!messages) throw new Error('No messages found in thread')
 
-  console.log('messages in getThread', JSON.stringify(messages, null, 2))
-
   // Process messages to convert them to CoreMessage format
   const result: CoreMessage[] = []
-
   for (const message of messages) {
     const isBot = !!message.bot_id
-    const role = isBot ? 'assistant' : 'user'
 
     // Skip messages without text or files
     if (!message.text && (!message.files || message.files.length === 0)) continue
 
     // Handle regular text messages
     if (message.text && !message.files) {
-      if (role === 'assistant') {
+      if (isBot) {
         result.push({
           role: 'assistant',
           content: message.text,
@@ -100,22 +99,14 @@ export async function getThread(
               ) {
                 // Use Slack's transcription
                 transcription = file.transcription.preview.content
-                console.log(`Using Slack's transcription for ${filename}`)
               } else {
                 // No Slack transcription available, use our own
-                updateStatus?.('Transcribing audio...')
+                updateStatus?.('👂 transcribing audio (this may take a few seconds)...')
 
                 // Create tracking data for Helicone observability
-                const trackingData: HeliconeTrackingData = {
-                  userId: message.user || 'unknown',
-                  channelId: channel_id,
-                  threadTs: thread_ts,
-                  messageTs: message.ts || '',
-                  operation: 'fileTranscription',
-                }
+                trackingData.operation = 'generateTranscription'
 
                 transcription = await generateTranscription(base64, trackingData)
-                console.log(`Used our transcription for ${filename}`)
               }
 
               // Find existing text part or create one
@@ -124,12 +115,12 @@ export async function getThread(
               if (textPartIndex >= 0) {
                 // Append to existing text part
                 const textPart = contentParts[textPartIndex] as TextPart
-                textPart.text += `\n\n[Transcription of "${filename}"]: ${transcription}`
+                textPart.text += `\n\n[The following audio message was attached to this thread and has been transcribed]: ${transcription}`
               } else {
                 // Create new text part
                 contentParts.push({
                   type: 'text' as const,
-                  text: `[Transcription of "${filename}"]: ${transcription}`,
+                  text: `[The following audio message was attached to this thread and has been transcribed]: ${transcription}`,
                 })
               }
             }
@@ -162,7 +153,7 @@ export async function getThread(
 
       // Add the message with content parts
       if (contentParts.length > 0) {
-        if (role === 'assistant') {
+        if (isBot) {
           result.push({
             role: 'assistant',
             content: contentParts,
