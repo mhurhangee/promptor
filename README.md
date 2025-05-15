@@ -29,11 +29,12 @@ An opinionated AI-tutor slackbot. Based on [AI SDK Slackbot](https://github.com/
 - ✅ Add moderation for input and output (OpenAI moderation & structured outputs)
 - ✅ Image and file error handling (basic)
 - ✅ Transcribe voice (/video) inputs (using whisper and slack's transcription)
-- ✅ Tracing/analytics/monitoring/rate limits/caching all with Helicone
-- ⬜ Switchable personalities
+- ✅ Tracing/analytics/monitoring/rate limits/caching all possible with Helicone (requires further integration)
 - ⬜ Shortcut/reaction to retry/regenerate
+- ⬜ Switchable personalities
 - ⬜ Token limits?
 - ⬜ Add support for AI-generated images?
 - ⬜ Reactions as feedback?
+- ⬜ Additional Helicone integration?
 
 

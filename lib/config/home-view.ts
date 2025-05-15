@@ -3,10 +3,9 @@ import { contextList } from '../slack'
 
 // 2. Quick Start section using contextList
 const quickStart = {
-  title: '⚡ *Quick Start*',
+  title: '⚡ *Quick start*',
   items: [
     '💬 *DM Promptor* to get instant help',
-    //'🔄 *Mention* `@Promptor` in any channel', DISABLED
     '📎 *Pin Promptor* to your sidebar for quick access',
   ],
 }
@@ -15,10 +14,11 @@ const quickStart = {
 const features = {
   title: '✨ *Features*',
   items: [
-    '🤖 *AI Tutor* for all your questions',
-    '🌐 *Web Search* in Slack',
-    '📄 *File & Image* support',
-    '🔁 *Follow-up* on topics',
+    '🤖 *AI tutor* for all your AI questions',
+    '🌐 *Web search* for up-to-date information and answers',
+    '📄 *File & image* support',
+    '📸 *Voice* and *video* support',
+    '🔁 *Follow-ups* to keep the conversation going',
   ],
 }
 
