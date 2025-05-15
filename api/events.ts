@@ -1,7 +1,7 @@
 // Event handler API endpoint
 
 import { eventHandler } from '../lib/events'
-import { getAuthTest, verifyRequest } from '../lib/slack'
+import { verifyRequest } from '../lib/slack'
 
 export async function POST(request: Request) {
   const rawBody = await request.text()
@@ -17,10 +17,6 @@ export async function POST(request: Request) {
   await verifyRequest({ requestType, request, rawBody })
 
   try {
-    //const authTest = await getAuthTest()
-    //console.log('authTest', authTest)
-    //console.log('payload', payload)
-    //console.log('payload.event', payload.event)
     eventHandler(payload.event)
 
     return new Response('Success!', { status: 200 })

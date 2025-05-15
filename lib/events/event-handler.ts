@@ -12,20 +12,19 @@ import {
   isAssistantMessage,
 } from '../events'
 
-// Handle events
-export const eventHandler = (event: SlackEvent) => {
-  // Handle home tab
-  if (event.type === 'app_home_opened') {
-    waitUntil(handleHome(event as AppHomeOpenedEvent))
+export const eventHandler = (slackEvent: SlackEvent) => {
+  // Handle app home opened
+  if (slackEvent.type === 'app_home_opened') {
+    waitUntil(handleHome(slackEvent as AppHomeOpenedEvent))
   }
 
-  // Handle new assistant thread
-  if (event.type === 'assistant_thread_started') {
-    waitUntil(handleAssistantThreadStarted(event as AssistantThreadStartedEvent))
+  // Handle assistant thread started
+  if (slackEvent.type === 'assistant_thread_started') {
+    waitUntil(handleAssistantThreadStarted(slackEvent as AssistantThreadStartedEvent))
   }
 
-  // Handle message to assistant from user
-  if (isAssistantMessage(event)) {
-    waitUntil(handleNewAssistantMessage(event as GenericMessageEvent))
+  // Handle new assistant message
+  if (isAssistantMessage(slackEvent)) {
+    waitUntil(handleNewAssistantMessage(slackEvent as GenericMessageEvent))
   }
 }

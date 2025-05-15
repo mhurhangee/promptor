@@ -1,6 +1,5 @@
 import type { SlackEvent } from '@slack/web-api'
 
-// Adapted from isAssistantMessage in https://github.com/slackapi/bolt-js/blob/main/src/Assistant.ts
 export function isAssistantMessage(event: SlackEvent): boolean {
   const isMessage = event.type === 'message'
   const isThreadMessage = 'channel' in event && 'thread_ts' in event

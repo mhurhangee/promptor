@@ -10,5 +10,5 @@ export const postFullResponse = async (
 
   await postMessage(output.response, output.responseTitle, channel, thread_ts)
 
-  await setFollowupsUtil(channel, thread_ts)(output.followUps ?? [])
+  await setFollowupsUtil(channel, thread_ts, output.followUps ?? [])
 }
