@@ -26,7 +26,7 @@
 - Handle errors gracefully and informatively
 
 ## 4. Documentation
-- Add docstrings to explain the purpose of each function and module
+- Add concise comments to explain the purpose of each function and module
 - Add concise clarifying comments to explain the logic of each function
 - Keep README up to date
 

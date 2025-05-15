@@ -17,7 +17,12 @@ export async function checkModeration(messages: CoreMessage[]): Promise<Prefligh
   try {
     // Only check the last message (from the user)
     const lastMessage = messages[messages.length - 1]
-    if (!lastMessage || lastMessage.role !== 'user') {
+    // Early exit conditions
+    if (
+      !lastMessage ||
+      lastMessage.role !== 'user' ||
+      (typeof lastMessage.content === 'string' && !lastMessage.content.trim())
+    ) {
       return { passed: true }
     }
 
@@ -49,13 +54,6 @@ export async function checkModeration(messages: CoreMessage[]): Promise<Prefligh
       return { passed: true }
     }
 
-    // Log the request payload for debugging
-    const requestPayload = {
-      model: 'omni-moderation-latest',
-      input: inputs,
-    }
-    console.log('==> Moderation API Request:', JSON.stringify(requestPayload, null, 2))
-
     // Call OpenAI moderation API directly using fetch
     const response = await fetch('https://api.openai.com/v1/moderations', {
       method: 'POST',
@@ -63,7 +61,10 @@ export async function checkModeration(messages: CoreMessage[]): Promise<Prefligh
         'Content-Type': 'application/json',
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
-      body: JSON.stringify(requestPayload),
+      body: JSON.stringify({
+        model: 'omni-moderation-latest',
+        input: inputs,
+      }),
     })
 
     if (!response.ok) {
@@ -72,50 +73,13 @@ export async function checkModeration(messages: CoreMessage[]): Promise<Prefligh
 
     const moderation = (await response.json()) as ModerationResponse
 
-    // Log the moderation response for debugging
-    console.log('==> Moderation API Response:', JSON.stringify(moderation, null, 2))
-
     // Check if any input was flagged
     const flagged = moderation.results.some((result) => result.flagged)
 
-    // Log the flagged status
-    console.log('==> Content flagged:', flagged)
-
     if (flagged) {
-      // Create a redacted version of the message
-      let redactedMessage: CoreMessage
-
-      if (typeof lastMessage.content === 'string') {
-        // Redact text message
-        redactedMessage = {
-          ...lastMessage,
-          content: '[Content redacted due to moderation policy]',
-        }
-      } else if (Array.isArray(lastMessage.content)) {
-        // Redact content parts
-        const redactedParts = lastMessage.content.map((part) => {
-          if (part.type === 'text') {
-            return { ...part, text: '[Content redacted due to moderation policy]' }
-          }
-          if (part.type === 'image') {
-            return { type: 'text' as const, text: '[Image redacted due to moderation policy]' }
-          }
-          return part
-        })
-
-        redactedMessage = {
-          ...lastMessage,
-          content: redactedParts,
-        }
-      } else {
-        redactedMessage = lastMessage
-      }
-
       return {
         passed: false,
-        errorMessage:
-          'Your message contains content that violates our moderation policy. It has been redacted.',
-        redactedMessage,
+        errorMessage: 'Your message contains content that violates our moderation policy.',
       }
     }
 

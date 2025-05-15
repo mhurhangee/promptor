@@ -37,18 +37,12 @@ export const createOutputGuardrailMiddleware = (): LanguageModelV1Middleware => 
           messages: [
             {
               role: 'user',
-              content: `Please check if this AI response is appropriate and relevant: "${result.text}"`,
+              content: `"${result.text}"`,
             },
           ],
         })
 
-        console.log('==> checkResult', checkResult.object)
-
-        // If the response is not appropriate, return a properly formatted JSON response
         if (!checkResult.object.appropriate) {
-          console.warn('Output guardrail triggered:', checkResult.object.reason)
-
-          // Create a properly formatted JSON response that matches the expected schema
           const safeResponse = JSON.stringify({
             threadTitle: '🚫 Content Moderation',
             responseTitle: '⚠️ Content Filtered',
@@ -75,13 +69,6 @@ export const createOutputGuardrailMiddleware = (): LanguageModelV1Middleware => 
         console.error('Output guardrail check failed:', error)
         return result
       }
-    },
-
-    // For streaming responses, we can't easily check the full content
-    // before it starts streaming, so we'll just pass it through
-    // A more complex implementation could buffer chunks and check periodically
-    wrapStream: async ({ doStream }) => {
-      return doStream()
     },
   }
 }

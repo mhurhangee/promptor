@@ -1,6 +1,7 @@
-import type { SlackEvent } from '@slack/web-api'
+// Event handler API endpoint
+
 import { eventHandler } from '../lib/events'
-import { getBotId, verifyRequest } from '../lib/slack'
+import { verifyRequest } from '../lib/slack'
 
 export async function POST(request: Request) {
   const rawBody = await request.text()
@@ -12,14 +13,12 @@ export async function POST(request: Request) {
     return new Response(payload.challenge, { status: 200 })
   }
 
+  // Verify slack request
   await verifyRequest({ requestType, request, rawBody })
 
+  // Handle event
   try {
-    const botUserId = await getBotId()
-    const event = payload.event as SlackEvent
-
-    eventHandler(event, botUserId)
-
+    eventHandler(payload.event)
     return new Response('Success!', { status: 200 })
   } catch (error) {
     console.error('Error generating response', error)
