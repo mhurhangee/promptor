@@ -64,6 +64,12 @@ const byteConfirmationModal = async (viewId: string, byteName: string) => {
       ],
     },
   })
+
+  // Important: Acknowledge submission with an empty object
+  return new Response(JSON.stringify({}), {
+    headers: { 'Content-Type': 'application/json' },
+    status: 200,
+  })
 }
 
 export async function POST(request: Request) {
@@ -95,6 +101,7 @@ export async function POST(request: Request) {
   if (payload.type === 'view_submission' && payload.view.callback_id === 'new_byte') {
     const byteName = payload.view.state.values.input_block.byte_name.value
     const viewId = payload.view.id
+
     waitUntil(byteConfirmationModal(viewId, byteName))
     return new Response('OK', { status: 200 })
   }
