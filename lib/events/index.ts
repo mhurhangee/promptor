@@ -1,6 +1,6 @@
 export * from './event-handler'
-//export * from './_handle-app-mention'
 export * from './handle-home'
 export * from './handle-assistant-thread-started'
 export * from './handle-new-assistant-message'
+export * from './handle-reaction'
 export * from './is-assistant-message'

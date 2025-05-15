@@ -10,6 +10,7 @@ import {
   handleAssistantThreadStarted,
   handleHome,
   handleNewAssistantMessage,
+  handleReaction,
   isAssistantMessage,
 } from '../events'
 
@@ -31,6 +32,6 @@ export const eventHandler = (slackEvent: SlackEvent) => {
 
   // Handle reaction added
   if (slackEvent.type === 'reaction_added') {
-    console.log('Reaction added:', slackEvent)
+    waitUntil(handleReaction(slackEvent as ReactionAddedEvent))
   }
 }
