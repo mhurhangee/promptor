@@ -6,11 +6,9 @@ import { runPreflightChecks } from '../checks'
 import { AI_CONFIG, RESPONSE_SCHEMA, THINKING_MESSAGES } from '../config'
 import { mrkdwn } from '../slack'
 import { getRandomItem } from '../utils'
-import { type HeliconeTrackingData, generateHeliconeHeaders } from './helicone-utils'
 
 export const generateResponse = async (
   messages: CoreMessage[],
-  trackingData: HeliconeTrackingData,
   updateStatus?: (status: string) => void
 ) => {
   // Update status to thinking
@@ -37,12 +35,6 @@ export const generateResponse = async (
     // Update status to thinking
     updateStatus?.(getRandomItem(THINKING_MESSAGES))
 
-    // Set operation for Helicone tracking
-    trackingData.operation = 'generateResponse'
-
-    // Generate Helicone tracking headers if tracking data is provided
-    const heliconeHeaders = generateHeliconeHeaders(trackingData, true, true) // Enable caching and rate limiting
-
     // Generate response with guardrails
     const { experimental_output: output } = await generateText({
       model: AI_CONFIG.model,
@@ -54,7 +46,6 @@ export const generateResponse = async (
       tools: AI_CONFIG.tools,
       experimental_output: Output.object({ schema: RESPONSE_SCHEMA }),
       messages: messages,
-      headers: heliconeHeaders,
     })
 
     // Update status to done

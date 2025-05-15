@@ -31,8 +31,6 @@ An opinionated AI-tutor slackbot. Based on [AI SDK Slackbot](https://github.com/
 - ✅ Transcribe voice (/video) inputs (using whisper and slack's transcription)
 - ✅ Tracing/analytics/monitoring/rate limits/caching all with Helicone
 - ⬜ Switchable personalities
-
-
 - ⬜ Shortcut/reaction to retry/regenerate
 - ⬜ Token limits?
 - ⬜ Add support for AI-generated images?

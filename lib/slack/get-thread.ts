@@ -8,7 +8,6 @@ import type {
 } from 'ai'
 
 import { generateTranscription } from '../ai/generate-transcription'
-import type { HeliconeTrackingData } from '../ai/helicone-utils'
 import { AI_CONFIG } from '../config'
 import { client } from './client'
 import { getFileAsBase64 } from './get-file-as-base64'
@@ -16,7 +15,6 @@ import { getFileAsBase64 } from './get-file-as-base64'
 export async function getThread(
   channel_id: string,
   thread_ts: string,
-  trackingData: HeliconeTrackingData,
   updateStatus?: (status: string) => void
 ): Promise<CoreMessage[]> {
   updateStatus?.(' is reading the thread...')
@@ -103,10 +101,7 @@ export async function getThread(
                 // No Slack transcription available, use our own
                 updateStatus?.('👂 transcribing audio (this may take a few seconds)...')
 
-                // Create tracking data for Helicone observability
-                trackingData.operation = 'generateTranscription'
-
-                transcription = await generateTranscription(base64, trackingData)
+                transcription = await generateTranscription(base64)
               }
 
               // Find existing text part or create one
