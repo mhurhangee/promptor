@@ -5,10 +5,8 @@ import { verifyRequest } from '../lib/slack'
 
 export async function POST(request: Request) {
   const rawBody = await request.text()
-  console.log('rawBody', rawBody)
   const payload = JSON.parse(rawBody)
-  console.log('payload', payload)
-  const requestType = payload.type as 'url_verification' | 'event_callback' | 'shortcut'
+  const requestType = payload.type as 'url_verification' | 'event_callback'
 
   // See https://api.slack.com/events/url_verification
   if (requestType === 'url_verification') {
