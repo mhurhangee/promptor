@@ -38,38 +38,28 @@ const newByteModal = async (trigger_id: string) => {
   })
 }
 
-const byteConfirmationModal = async (viewId: string, byteName: string) => {
-  // Push a new modal (stacked) — or use views.update to replace
-  await client.views.update({
-    view_id: viewId, // Replaces existing modal
-    view: {
-      type: 'modal',
-      callback_id: 'byte_confirmation',
-      title: {
-        type: 'plain_text',
-        text: 'Confirm Byte',
-      },
-      close: {
-        type: 'plain_text',
-        text: 'Close',
-      },
-      blocks: [
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: `You created a byte called *${byteName}* 🚀`,
-          },
-        },
-      ],
+export async function byteConfirmationModal(byteName: string) {
+  // Create a new modal to show the confirmation
+  return {
+    type: 'modal',
+    title: {
+      type: 'plain_text',
+      text: 'Confirm Byte',
     },
-  })
-
-  // Important: Acknowledge submission with an empty object
-  return new Response(JSON.stringify({}), {
-    headers: { 'Content-Type': 'application/json' },
-    status: 200,
-  })
+    close: {
+      type: 'plain_text',
+      text: 'Close',
+    },
+    blocks: [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `You created a byte called *${byteName}* 🚀`,
+        },
+      },
+    ],
+  }
 }
 
 export async function POST(request: Request) {
@@ -100,10 +90,22 @@ export async function POST(request: Request) {
 
   if (payload.type === 'view_submission' && payload.view.callback_id === 'new_byte') {
     const byteName = payload.view.state.values.input_block.byte_name.value
-    const viewId = payload.view.id
 
-    waitUntil(byteConfirmationModal(viewId, byteName))
-    return new Response('OK', { status: 200 })
+    // For view_submission, we need to return a specific response format
+    // to either close the modal or update it with a new view
+    const confirmationView = await byteConfirmationModal(byteName)
+
+    // Return the response that Slack expects for view_submission
+    return new Response(
+      JSON.stringify({
+        response_action: 'update',
+        view: confirmationView,
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+        status: 200,
+      }
+    )
   }
 
   return new Response('Not a shortcut payload', { status: 400 })
