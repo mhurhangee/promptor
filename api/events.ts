@@ -17,10 +17,10 @@ export async function POST(request: Request) {
   await verifyRequest({ requestType, request, rawBody })
 
   try {
-    const authTest = await getAuthTest()
+    //const authTest = await getAuthTest()
     //console.log('authTest', authTest)
     //console.log('payload', payload)
-    console.log('payload.event', payload.event)
+    //console.log('payload.event', payload.event)
     eventHandler(payload.event)
 
     return new Response('Success!', { status: 200 })
