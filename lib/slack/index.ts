@@ -1,6 +1,6 @@
 export * from './client'
 export * from './context-list'
-export * from './get-bot-id'
+export * from './get-auth-test'
 export * from './get-file-as-base64'
 export * from './get-thread'
 export * from './mrkdwn'

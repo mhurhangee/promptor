@@ -4,9 +4,9 @@ import { generateResponse } from '../ai'
 import type { HeliconeTrackingData } from '../ai/helicone-utils'
 import { getThread, postFullResponse, updateStatusUtil } from '../slack'
 
-export async function handleNewAssistantMessage(event: GenericMessageEvent, botUserId: string) {
+export async function handleNewAssistantMessage(event: GenericMessageEvent) {
   // Exclude bot messages and your own bot (TODO: is this necessary?)
-  if (event.bot_id || event.bot_id === botUserId || event.bot_profile || !event.thread_ts) return
+  if (event.bot_id || event.bot_profile || !event.thread_ts) return
 
   const { thread_ts, channel, user, ts } = event
   const updateStatus = updateStatusUtil(channel, thread_ts)
@@ -17,10 +17,9 @@ export async function handleNewAssistantMessage(event: GenericMessageEvent, botU
     channelId: channel,
     threadTs: thread_ts,
     messageTs: ts,
-    botId: botUserId,
   }
 
-  const messages = await getThread(channel, thread_ts, updateStatus, botUserId)
+  const messages = await getThread(channel, thread_ts, updateStatus)
 
   const output = await generateResponse(messages, updateStatus, trackingData)
 

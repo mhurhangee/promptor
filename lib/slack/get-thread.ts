@@ -16,8 +16,7 @@ import { getFileAsBase64 } from './get-file-as-base64'
 export async function getThread(
   channel_id: string,
   thread_ts: string,
-  updateStatus?: (status: string) => void,
-  botUserId?: string
+  updateStatus?: (status: string) => void
 ): Promise<CoreMessage[]> {
   const { messages } = await client.conversations.replies({
     channel: channel_id,
@@ -112,7 +111,6 @@ export async function getThread(
                   channelId: channel_id,
                   threadTs: thread_ts,
                   messageTs: message.ts || '',
-                  botId: botUserId,
                   operation: 'fileTranscription',
                 }
 

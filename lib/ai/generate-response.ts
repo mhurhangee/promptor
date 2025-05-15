@@ -1,3 +1,5 @@
+// Main AI logic - generate response to user's message, handle preflight checks, and generate response with guardrails
+
 import { type CoreMessage, Output, generateText } from 'ai'
 
 import { runPreflightChecks } from '../checks'
@@ -13,6 +15,7 @@ export const generateResponse = async (
 ) => {
   // Update status to thinking
   updateStatus?.(getRandomItem(THINKING_MESSAGES))
+
   try {
     // Run preflight checks on the messages
     const preflightResult = await runPreflightChecks(messages)
