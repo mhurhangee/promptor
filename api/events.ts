@@ -18,8 +18,8 @@ export async function POST(request: Request) {
 
   try {
     const authTest = await getAuthTest()
-    console.log('authTest', authTest)
-    console.log('payload', payload)
+    //console.log('authTest', authTest)
+    //console.log('payload', payload)
     console.log('payload.event', payload.event)
     eventHandler(payload.event)
 
