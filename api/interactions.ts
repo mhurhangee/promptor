@@ -1,4 +1,78 @@
+import { waitUntil } from '@vercel/functions'
 import { client, verifyRequest } from '../lib/slack' // adjust path if needed
+
+const newByteModal = async (trigger_id: string) => {
+  // Open a modal as response
+  await client.views.open({
+    trigger_id,
+    view: {
+      type: 'modal',
+      callback_id: 'new_byte',
+      title: {
+        type: 'plain_text',
+        text: 'New Byte',
+      },
+      submit: {
+        type: 'plain_text',
+        text: 'Submit',
+      },
+      close: {
+        type: 'plain_text',
+        text: 'Cancel',
+      },
+      blocks: [
+        {
+          type: 'input',
+          block_id: 'input_block',
+          label: {
+            type: 'plain_text',
+            text: 'What is the name of your byte?',
+          },
+          element: {
+            type: 'plain_text_input',
+            action_id: 'byte_name',
+          },
+        },
+      ],
+    },
+  })
+
+  return new Response('OK', { status: 200 })
+}
+
+const byteConfirmationModal = async (viewId: string, byteName: string) => {
+  // Push a new modal (stacked) — or use views.update to replace
+  await client.views.update({
+    view_id: viewId, // Replaces existing modal
+    view: {
+      type: 'modal',
+      callback_id: 'byte_confirmation',
+      title: {
+        type: 'plain_text',
+        text: 'Confirm Byte',
+      },
+      close: {
+        type: 'plain_text',
+        text: 'Close',
+      },
+      blocks: [
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: `You created a byte called *${byteName}* 🚀`,
+          },
+        },
+      ],
+    },
+  })
+
+  // Important: Acknowledge submission with an empty object
+  return new Response(JSON.stringify({}), {
+    headers: { 'Content-Type': 'application/json' },
+    status: 200,
+  })
+}
 
 export async function POST(request: Request) {
   const rawBody = await request.text()
@@ -20,42 +94,7 @@ export async function POST(request: Request) {
     const { callback_id, trigger_id } = payload
 
     if (callback_id === 'new_byte') {
-      // Open a modal as response
-      await client.views.open({
-        trigger_id,
-        view: {
-          type: 'modal',
-          callback_id: 'new_byte',
-          title: {
-            type: 'plain_text',
-            text: 'New Byte',
-          },
-          submit: {
-            type: 'plain_text',
-            text: 'Submit',
-          },
-          close: {
-            type: 'plain_text',
-            text: 'Cancel',
-          },
-          blocks: [
-            {
-              type: 'input',
-              block_id: 'input_block',
-              label: {
-                type: 'plain_text',
-                text: 'What is the name of your byte?',
-              },
-              element: {
-                type: 'plain_text_input',
-                action_id: 'byte_name',
-              },
-            },
-          ],
-        },
-      })
-
-      return new Response('OK', { status: 200 })
+      waitUntil(newByteModal(trigger_id))
     }
 
     return new Response('Unknown shortcut callback_id', { status: 400 })
@@ -65,37 +104,8 @@ export async function POST(request: Request) {
     const byteName = payload.view.state.values.input_block.byte_name.value
     const viewId = payload.view.id
 
-    // Push a new modal (stacked) — or use views.update to replace
-    await client.views.update({
-      view_id: viewId, // Replaces existing modal
-      view: {
-        type: 'modal',
-        callback_id: 'byte_confirmation',
-        title: {
-          type: 'plain_text',
-          text: 'Confirm Byte',
-        },
-        close: {
-          type: 'plain_text',
-          text: 'Close',
-        },
-        blocks: [
-          {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: `You created a byte called *${byteName}* 🚀`,
-            },
-          },
-        ],
-      },
-    })
-
-    // Important: Acknowledge submission with an empty object
-    return new Response(JSON.stringify({}), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 200,
-    })
+    waitUntil(byteConfirmationModal(viewId, byteName))
+    return new Response('OK', { status: 200 })
   }
 
   return new Response('Not a shortcut payload', { status: 400 })
