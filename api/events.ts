@@ -16,6 +16,8 @@ export async function POST(request: Request) {
   // Verify slack request
   await verifyRequest({ requestType, request, rawBody })
 
+  console.log(payload)
+
   // Handle event
   try {
     eventHandler(payload.event)
