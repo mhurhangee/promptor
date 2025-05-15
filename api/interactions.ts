@@ -11,6 +11,7 @@ export async function POST(request: Request) {
   }
 
   const payload = JSON.parse(payloadStr)
+  console.log(payload)
 
   // Slack request verification
   await verifyRequest({ requestType: 'interactive', request, rawBody })
