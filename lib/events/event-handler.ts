@@ -2,6 +2,7 @@ import type {
   AppHomeOpenedEvent,
   AssistantThreadStartedEvent,
   GenericMessageEvent,
+  ReactionAddedEvent,
   SlackEvent,
 } from '@slack/web-api'
 import { waitUntil } from '@vercel/functions'
@@ -26,5 +27,10 @@ export const eventHandler = (slackEvent: SlackEvent) => {
   // Handle new assistant message
   if (isAssistantMessage(slackEvent)) {
     waitUntil(handleNewAssistantMessage(slackEvent as GenericMessageEvent))
+  }
+
+  // Handle reaction added
+  if (slackEvent.type === 'reaction_added') {
+    console.log('Reaction added:', slackEvent)
   }
 }
