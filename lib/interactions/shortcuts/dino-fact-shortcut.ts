@@ -10,20 +10,55 @@ import { generateDinoFact } from '../utils/dino-fact-generator'
  * Handles the dinosaur fact shortcut
  * Opens a modal with a generated dinosaur fact
  */
-export async function handleDinoFactShortcut(trigger_id: string): Promise<void> {
+export const handleDinoFactShortcut = async (trigger_id: string) => {
   try {
     // Generate a dinosaur fact using AI
     const dinoFact = await generateDinoFact()
 
-    // Open a modal with the dinosaur fact
-    await client.views.open({
+    // First, open a modal with a loading indicator
+    const response = await client.views.open({
       trigger_id,
       view: {
         type: 'modal',
         callback_id: 'dino_fact',
         title: {
           type: 'plain_text',
-          text: 'Dino Fact',
+          text: '!! Dino Fact !!',
+        },
+        close: {
+          type: 'plain_text',
+          text: 'Cancel',
+        },
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: '🦖 *Excavating dinosaur facts...*',
+            },
+          },
+          {
+            type: 'context',
+            elements: [
+              {
+                type: 'mrkdwn',
+                text: 'Please wait while we dig up something interesting...',
+              },
+            ],
+          },
+        ],
+      },
+    })
+
+    // Once we have the fact, update the modal with the content
+    await client.views.update({
+      view_id: response.view?.id || '',
+      view: {
+        type: 'modal',
+        callback_id: 'dino_fact',
+        title: {
+          type: 'plain_text',
+          text: '!! Dino Fact !!',
         },
         submit: {
           type: 'plain_text',

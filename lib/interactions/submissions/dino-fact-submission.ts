@@ -7,7 +7,7 @@
  * Handles the submission of the dinosaur fact modal
  * Returns a thank you view
  */
-export async function handleDinoFactSubmission() {
+export const handleDinoFactSubmission = async () => {
   return {
     response_action: 'update',
     view: {

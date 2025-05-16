@@ -25,7 +25,8 @@ export async function generateDinoFact(): Promise<DinoFact> {
     model: openaiClient.responses('gpt-4.1-mini'),
     system:
       'You are a paleontologist who specializes in dinosaurs. Generate a fun, educational, and accurate fact about dinosaurs that would be interesting to share.',
-    prompt: 'Generate a fun fact about dinosaurs. Make it educational, accurate, and interesting.',
+    prompt:
+      "Generate a fun fact about dinosaurs. Make it educational, accurate, and interesting. A user may ask several times for a new fact and you won't know the previous fact, so try and make it interesting and varied each time. ",
     schema: DinoFactSchema,
   })
 
