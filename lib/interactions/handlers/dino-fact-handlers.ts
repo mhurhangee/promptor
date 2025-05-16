@@ -19,9 +19,44 @@ export const handleDinoFactShortcut = async (trigger_id: string) => {
     // Generate a dinosaur fact using AI
     const dinoFact = await generateDinoFact()
 
-    // Open a modal with the dinosaur fact
-    await client.views.open({
+    // First, open a modal with a loading indicator
+    const response = await client.views.open({
       trigger_id,
+      view: {
+        type: 'modal',
+        callback_id: 'dino_fact',
+        title: {
+          type: 'plain_text',
+          text: '!! Dino Fact !!',
+        },
+        close: {
+          type: 'plain_text',
+          text: 'Cancel',
+        },
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: '🦖 *Excavating dinosaur facts...*',
+            },
+          },
+          {
+            type: 'context',
+            elements: [
+              {
+                type: 'mrkdwn',
+                text: 'Please wait while we dig up something interesting...',
+              },
+            ],
+          },
+        ],
+      },
+    })
+
+    // Once we have the fact, update the modal with the content
+    await client.views.update({
+      view_id: response.view?.id || '',
       view: {
         type: 'modal',
         callback_id: 'dino_fact',
@@ -133,7 +168,8 @@ async function generateDinoFact() {
     model: openaiClient.responses('gpt-4.1-mini'),
     system:
       'You are a paleontologist who specializes in dinosaurs. Generate a fun, educational, and accurate fact about dinosaurs that would be interesting to share.',
-    prompt: 'Generate a fun fact about dinosaurs. Make it educational, accurate, and interesting.',
+    prompt:
+      "Generate a fun fact about dinosaurs. Make it educational, accurate, and interesting. A user may ask several times for a new fact and you won't know the previous fact, so try and make it interesting and varied each time. ",
     schema: DinoFactSchema,
   })
 

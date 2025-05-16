@@ -1,15 +1,15 @@
 import { waitUntil } from '@vercel/functions'
 import type { SlackShortcut, SlackViewSubmission } from './types'
 
+import { handleDinoFactShortcut } from './handlers/dino-fact-handlers'
 import { handleAiFormShortcut } from './shortcuts/ai-form-shortcut'
 // Import shortcut handlers
 import { handleByteShortcut } from './shortcuts/byte-shortcut'
-import { handleDinoFactShortcut } from './shortcuts/dino-fact-shortcut'
 
+import { handleDinoFactSubmission } from './handlers/dino-fact-handlers'
 import { handleAiFormSubmission } from './submissions/ai-form-submission'
 // Import submission handlers
 import { handleByteSubmission } from './submissions/byte-submission'
-import { handleDinoFactSubmission } from './submissions/dino-fact-submission'
 
 /**
  * Routes shortcut interactions to the appropriate handler
