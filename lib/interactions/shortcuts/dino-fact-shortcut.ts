@@ -12,10 +12,7 @@ import { generateDinoFact } from '../utils/dino-fact-generator'
  */
 export const handleDinoFactShortcut = async (trigger_id: string) => {
   try {
-    // Generate a dinosaur fact using AI
-    const dinoFact = await generateDinoFact()
-
-    // First, open a modal with a loading indicator
+    // First, open a modal with a loading indicator immediately
     const response = await client.views.open({
       trigger_id,
       view: {
@@ -50,9 +47,21 @@ export const handleDinoFactShortcut = async (trigger_id: string) => {
       },
     })
 
+    // Store the view ID for later update
+    const viewId = response.view?.id
+
+    if (!viewId) {
+      console.error('Failed to get view ID from response')
+      return
+    }
+
+    // Generate the dinosaur fact AFTER showing the loading state
+    // This ensures the loading state is visible to the user
+    const dinoFact = await generateDinoFact()
+
     // Once we have the fact, update the modal with the content
     await client.views.update({
-      view_id: response.view?.id || '',
+      view_id: viewId,
       view: {
         type: 'modal',
         callback_id: 'dino_fact',
