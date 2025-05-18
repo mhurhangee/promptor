@@ -3,6 +3,7 @@
  * Handles all interactive components from Slack (shortcuts, view submissions, etc.)
  */
 
+import { waitUntil } from '@vercel/functions'
 import { interactionHandler } from '../lib/interactions'
 import { verifyRequest } from '../lib/slack'
 
@@ -29,7 +30,9 @@ export async function POST(request: Request) {
 
   // Handle different interaction types
   try {
-    interactionHandler(payload)
+    // Immediately respond to Slack to meet the 3-second requirement
+    // Then process the interaction asynchronously using waitUntil
+    waitUntil(interactionHandler(payload))
 
     return new Response('OK', { status: 200 })
   } catch (error) {

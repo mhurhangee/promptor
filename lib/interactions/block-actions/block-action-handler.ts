@@ -3,6 +3,7 @@
  * Routes block actions to the appropriate handler based on action_id
  */
 
+import { waitUntil } from '@vercel/functions'
 import {
   handleCopyPrompt,
   handleCreatePrompt,
@@ -17,7 +18,7 @@ import type { SlackAction, SlackBlockAction } from '../types'
  * @param payload - The Slack block action payload
  * @returns Response object or null
  */
-export const blockActionHandler = (payload: SlackBlockAction): Promise<void> | null => {
+export const blockActionHandler = (payload: SlackBlockAction): void => {
   // Extract action from payload
   const action: SlackAction = payload.actions[0]
   const actionId: string = action.action_id
@@ -25,19 +26,23 @@ export const blockActionHandler = (payload: SlackBlockAction): Promise<void> | n
   // Route to the appropriate handler based on action_id
   switch (actionId) {
     case 'open_prompt_library':
-      return handleOpenPromptLibrary(payload)
+      waitUntil(handleOpenPromptLibrary(payload))
+      break
 
     case 'create_prompt':
-      return handleCreatePrompt(payload)
+      waitUntil(handleCreatePrompt(payload))
+      break
 
     case 'view_prompt_details':
-      return handleViewPromptDetails(payload, action)
+      waitUntil(handleViewPromptDetails(payload, action))
+      break
 
     case 'copy_prompt':
-      return handleCopyPrompt(payload, action)
+      waitUntil(handleCopyPrompt(payload, action))
+      break
 
     default:
       console.warn(`Unknown block action: ${actionId}`)
-      return null
+    // No action needed for unknown actions
   }
 }

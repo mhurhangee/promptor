@@ -4,43 +4,39 @@ import { blockActionHandler } from './block-actions/block-action-handler'
 import { shortcutHandler } from './shortcuts/shortcut-handler'
 import { viewSubmissionHandler } from './submissions/view-submission-handler'
 
+/**
+ * Handles all types of Slack interactions
+ *
+ * @param payload - The Slack interaction payload
+ * @returns Promise that resolves when processing is complete
+ */
 export const interactionHandler = async (
   payload: SlackShortcut | SlackViewSubmission | SlackBlockAction
-) => {
+): Promise<void> => {
   try {
     // Handle shortcuts (global or message actions)
     if (payload.type === 'shortcut' || payload.type === 'message_action') {
       shortcutHandler(payload)
-      return new Response('OK', { status: 200 })
+      return
     }
 
     // Handle view submissions
     if (payload.type === 'view_submission') {
-      const response = await viewSubmissionHandler(payload)
-
-      if (response) {
-        return new Response(JSON.stringify(response), {
-          headers: { 'Content-Type': 'application/json' },
-          status: 200,
-        })
-      }
-
-      // Default empty response if no specific handler response
-      return new Response('', { status: 200 })
+      await viewSubmissionHandler(payload)
+      return
     }
 
     // Handle block actions
     if (payload.type === 'block_actions') {
       // Use the block action handler to route the action
       blockActionHandler(payload)
-      return new Response('OK', { status: 200 })
+      return
     }
 
     // Unhandled interaction type
     console.warn(`Unhandled interaction type: ${payload.type}`)
-    return new Response('OK', { status: 200 })
   } catch (error) {
     console.error('Error handling interaction:', error)
-    return new Response('Internal server error', { status: 500 })
+    throw error
   }
 }
