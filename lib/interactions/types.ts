@@ -79,6 +79,10 @@ export interface SlackBlockAction {
     team_id: string
   }
   trigger_id: string
+  container: {
+    type: string // 'view', 'message', etc.
+    view_id?: string // Present when container.type is 'view'
+  }
   view?: {
     id: string
     state: {

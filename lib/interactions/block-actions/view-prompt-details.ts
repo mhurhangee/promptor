@@ -22,6 +22,7 @@ export async function handleViewPromptDetails(
     // Log the action for debugging
     console.log('View prompt details action:', JSON.stringify(action, null, 2))
     console.log('Payload trigger_id:', payload.trigger_id)
+    console.log('Container type:', payload.container.type)
 
     // Get prompt ID from button value
     if (!action.value) {
@@ -48,13 +49,27 @@ export async function handleViewPromptDetails(
         userHasUpvoted: false,
       }
 
-      // Open prompt detail modal
-      console.log('Opening prompt detail modal with trigger_id:', payload.trigger_id)
-      await client.views.open({
-        trigger_id: payload.trigger_id,
-        view: promptDetailView(promptWithStatus),
-      })
-      console.log('Successfully opened prompt detail modal')
+      // Check if we're in a modal already (container.type === 'view')
+      if (payload.container.type === 'view') {
+        console.log(
+          'Opening prompt detail modal from existing modal with view_id:',
+          payload.container.view_id
+        )
+        // When opening from an existing modal, we need to use views.push
+        await client.views.push({
+          trigger_id: payload.trigger_id,
+          view: promptDetailView(promptWithStatus),
+        })
+        console.log('Successfully pushed prompt detail modal onto the stack')
+      } else {
+        // Opening from home tab or message
+        console.log('Opening prompt detail modal with trigger_id:', payload.trigger_id)
+        await client.views.open({
+          trigger_id: payload.trigger_id,
+          view: promptDetailView(promptWithStatus),
+        })
+        console.log('Successfully opened prompt detail modal')
+      }
     } catch (error) {
       console.error('Error in view prompt details handler:', error)
       throw error

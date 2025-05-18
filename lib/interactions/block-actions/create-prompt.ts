@@ -21,6 +21,7 @@ export async function handleCreatePrompt(payload: SlackBlockAction): Promise<voi
         {
           trigger_id: payload.trigger_id,
           user: payload.user.id,
+          container: payload.container,
         },
         null,
         2
@@ -28,13 +29,27 @@ export async function handleCreatePrompt(payload: SlackBlockAction): Promise<voi
     )
 
     try {
-      // Open create prompt modal
-      console.log('Opening create prompt modal with trigger_id:', payload.trigger_id)
-      await client.views.open({
-        trigger_id: payload.trigger_id,
-        view: createPromptView,
-      })
-      console.log('Successfully opened create prompt modal')
+      // Check if we're in a modal already (container.type === 'view')
+      if (payload.container.type === 'view') {
+        console.log(
+          'Opening create prompt modal from existing modal with view_id:',
+          payload.container.view_id
+        )
+        // When opening from an existing modal, we need to use views.push
+        await client.views.push({
+          trigger_id: payload.trigger_id,
+          view: createPromptView,
+        })
+        console.log('Successfully pushed create prompt modal onto the stack')
+      } else {
+        // Opening from home tab or message
+        console.log('Opening create prompt modal with trigger_id:', payload.trigger_id)
+        await client.views.open({
+          trigger_id: payload.trigger_id,
+          view: createPromptView,
+        })
+        console.log('Successfully opened create prompt modal')
+      }
     } catch (error) {
       console.error('Error opening create prompt modal:', error)
       throw error
