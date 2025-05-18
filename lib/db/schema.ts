@@ -1,5 +1,5 @@
 // lib/db/schema.ts
-import { pgTable, serial, text, integer, timestamp, primaryKey } from 'drizzle-orm/pg-core';
+import { integer, pgTable, primaryKey, serial, text, timestamp } from 'drizzle-orm/pg-core'
 
 /**
  * Schema for the prompts table
@@ -15,7 +15,7 @@ export const prompts = pgTable('prompts', {
   createdBy: text('created_by').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
   upvotes: integer('upvotes').default(0),
-});
+})
 
 /**
  * Schema for tracking which users have upvoted which prompts
@@ -25,12 +25,14 @@ export const userUpvotes = pgTable(
   'user_upvotes',
   {
     userId: text('user_id').notNull(),
-    promptId: integer('prompt_id').notNull().references(() => prompts.id),
+    promptId: integer('prompt_id')
+      .notNull()
+      .references(() => prompts.id),
     createdAt: timestamp('created_at').defaultNow(),
   },
   (table) => {
     return {
       pk: primaryKey({ columns: [table.userId, table.promptId] }),
-    };
-  },
-);
+    }
+  }
+)

@@ -21,7 +21,10 @@
 ## 3. Coding Guidelines
 - Use clear function and variable names
 - Prefer async/await for async code
-- Use type annotations and interfaces
+- Use **TypeScript strictly**:
+    - Define all function inputs and outputs with proper type annotations
+    - Create and reuse interfaces/types instead of using any
+    - Avoid any; use unknown if absolutely necessary, and narrow it explicitly
 - Follow formatting and linting with Biome
 - Handle errors gracefully and informatively
 

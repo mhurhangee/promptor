@@ -3,7 +3,8 @@
  * Handles all interactive components from Slack (shortcuts, view submissions, etc.)
  */
 
-import { shortcutHandler, viewSubmissionHandler } from '../lib/interactions'
+import { blockActionHandler, shortcutHandler, viewSubmissionHandler } from '../lib/interactions'
+import type { SlackBlockAction, SlackViewSubmission } from '../lib/interactions/types'
 import { verifyRequest } from '../lib/slack'
 
 /**
@@ -34,7 +35,7 @@ export async function POST(request: Request) {
 
     // Handle view submissions
     if (payload.type === 'view_submission') {
-      const response = await viewSubmissionHandler(payload)
+      const response = await viewSubmissionHandler(payload as SlackViewSubmission)
 
       if (response) {
         return new Response(JSON.stringify(response), {
@@ -49,7 +50,8 @@ export async function POST(request: Request) {
 
     // Handle block actions
     if (payload.type === 'block_actions') {
-      // Block actions handler would go here
+      // Use the block action handler to route the action
+      blockActionHandler(payload as SlackBlockAction)
       return new Response('OK', { status: 200 })
     }
 

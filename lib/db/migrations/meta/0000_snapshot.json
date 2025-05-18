@@ -103,12 +103,8 @@
           "name": "user_upvotes_prompt_id_prompts_id_fk",
           "tableFrom": "user_upvotes",
           "tableTo": "prompts",
-          "columnsFrom": [
-            "prompt_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["prompt_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -116,10 +112,7 @@
       "compositePrimaryKeys": {
         "user_upvotes_user_id_prompt_id_pk": {
           "name": "user_upvotes_user_id_prompt_id_pk",
-          "columns": [
-            "user_id",
-            "prompt_id"
-          ]
+          "columns": ["user_id", "prompt_id"]
         }
       },
       "uniqueConstraints": {},

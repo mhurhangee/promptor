@@ -7,4 +7,6 @@
 export * from './types'
 
 // Export handlers
-export * from './interaction-handler'
+export * from './shortcut-handler'
+export * from './view-submission-handler'
+export * from './block-action-handler'

@@ -1,10 +1,12 @@
-import type { View, KnownBlock } from '@slack/web-api';
+import type { KnownBlock, View } from '@slack/web-api'
+
+import type { Prompt } from '../db/types'
 
 /**
  * Modal view for browsing prompts in the library
  * Includes search, filters, and a list of prompts
  */
-export const browsePromptsView = (prompts: any[] = [], category?: string): View => {
+export const browsePromptsView = (prompts: Prompt[] = [], category?: string): View => {
   // Categories for filtering prompts
   const categories = [
     { text: 'All Prompts', value: 'all' },
@@ -15,53 +17,54 @@ export const browsePromptsView = (prompts: any[] = [], category?: string): View 
     { text: 'Business', value: 'business' },
     { text: 'Education', value: 'education' },
     { text: 'Other', value: 'other' },
-  ];
+  ]
 
   // Generate prompt list blocks
-  const promptBlocks = prompts.length > 0
-    ? prompts.flatMap((prompt, index) => {
-        // Add a divider between prompts except for the first one
-        const divider = index === 0 ? [] : [{ type: 'divider' }];
-        
-        return [
-          ...divider,
+  const promptBlocks =
+    prompts.length > 0
+      ? prompts.flatMap((prompt, index) => {
+          // Add a divider between prompts except for the first one
+          const divider = index === 0 ? [] : [{ type: 'divider' }]
+
+          return [
+            ...divider,
+            {
+              type: 'section',
+              text: {
+                type: 'mrkdwn',
+                text: `*${prompt.title}*\n${prompt.description || 'No description provided'}`,
+              },
+              accessory: {
+                type: 'button',
+                text: {
+                  type: 'plain_text',
+                  text: 'View',
+                  emoji: true,
+                },
+                value: `${prompt.id}`,
+                action_id: 'view_prompt_details',
+              },
+            },
+            {
+              type: 'context',
+              elements: [
+                {
+                  type: 'mrkdwn',
+                  text: `👍 ${prompt.upvotes || 0} | Category: ${prompt.category || 'Uncategorized'} | Added by <@${prompt.createdBy}>`,
+                },
+              ],
+            },
+          ]
+        })
+      : [
           {
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: `*${prompt.title}*\n${prompt.description || 'No description provided'}`,
-            },
-            accessory: {
-              type: 'button',
-              text: {
-                type: 'plain_text',
-                text: 'View',
-                emoji: true,
-              },
-              value: `${prompt.id}`,
-              action_id: 'view_prompt_details',
+              text: 'No prompts found. Be the first to add one!',
             },
           },
-          {
-            type: 'context',
-            elements: [
-              {
-                type: 'mrkdwn',
-                text: `👍 ${prompt.upvotes || 0} | Category: ${prompt.category || 'Uncategorized'} | Added by <@${prompt.createdBy}>`,
-              },
-            ],
-          },
-        ];
-      })
-    : [
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: 'No prompts found. Be the first to add one!',
-          },
-        },
-      ];
+        ]
 
   return {
     type: 'modal',
@@ -91,7 +94,7 @@ export const browsePromptsView = (prompts: any[] = [], category?: string): View 
           emoji: true,
         },
       },
-      
+
       // Search input
       {
         type: 'input',
@@ -111,7 +114,7 @@ export const browsePromptsView = (prompts: any[] = [], category?: string): View 
           emoji: true,
         },
       },
-      
+
       // Category filter
       {
         type: 'input',
@@ -125,14 +128,14 @@ export const browsePromptsView = (prompts: any[] = [], category?: string): View 
             text: 'Select a category',
             emoji: true,
           },
-          initial_option: category 
+          initial_option: category
             ? {
                 text: {
                   type: 'plain_text',
-                  text: categories.find(c => c.value === category)?.text || 'All Prompts',
+                  text: categories.find((c) => c.value === category)?.text || 'All Prompts',
                   emoji: true,
                 },
-                value: category
+                value: category,
               }
             : {
                 text: {
@@ -140,9 +143,9 @@ export const browsePromptsView = (prompts: any[] = [], category?: string): View 
                   text: categories[0].text,
                   emoji: true,
                 },
-                value: categories[0].value
+                value: categories[0].value,
               },
-          options: categories.map(cat => ({
+          options: categories.map((cat) => ({
             text: {
               type: 'plain_text',
               text: cat.text,
@@ -157,7 +160,7 @@ export const browsePromptsView = (prompts: any[] = [], category?: string): View 
           emoji: true,
         },
       },
-      
+
       // Action buttons
       {
         type: 'actions',
@@ -184,11 +187,11 @@ export const browsePromptsView = (prompts: any[] = [], category?: string): View 
           },
         ],
       } as KnownBlock,
-      
+
       {
         type: 'divider',
       },
-      
+
       // Prompt list section
       {
         type: 'section',
@@ -197,12 +200,12 @@ export const browsePromptsView = (prompts: any[] = [], category?: string): View 
           text: '*Available Prompts*',
         },
       },
-      
+
       // Prompt list (dynamic based on search/filter)
       ...promptBlocks,
     ],
-  };
-};
+  }
+}
 
 /**
  * Modal view for creating a new prompt
@@ -235,7 +238,7 @@ export const createPromptView: View = {
         emoji: true,
       },
     },
-    
+
     // Title input
     {
       type: 'input',
@@ -254,7 +257,7 @@ export const createPromptView: View = {
         emoji: true,
       },
     },
-    
+
     // Description input
     {
       type: 'input',
@@ -273,7 +276,7 @@ export const createPromptView: View = {
         emoji: true,
       },
     },
-    
+
     // Content input
     {
       type: 'input',
@@ -293,7 +296,7 @@ export const createPromptView: View = {
         emoji: true,
       },
     },
-    
+
     // Category select
     {
       type: 'input',
@@ -371,7 +374,7 @@ export const createPromptView: View = {
         emoji: true,
       },
     },
-    
+
     // Tags input
     {
       type: 'input',
@@ -392,12 +395,12 @@ export const createPromptView: View = {
       },
     },
   ],
-};
+}
 
 /**
  * Modal view for viewing prompt details
  */
-export const promptDetailView = (prompt: any): View => {
+export const promptDetailView = (prompt: Prompt & { userHasUpvoted?: boolean }): View => {
   return {
     type: 'modal',
     title: {
@@ -421,7 +424,7 @@ export const promptDetailView = (prompt: any): View => {
           emoji: true,
         },
       },
-      
+
       // Metadata
       {
         type: 'context',
@@ -432,7 +435,7 @@ export const promptDetailView = (prompt: any): View => {
           },
         ],
       },
-      
+
       // Description
       {
         type: 'section',
@@ -441,11 +444,11 @@ export const promptDetailView = (prompt: any): View => {
           text: `*Description*\n${prompt.description || 'No description provided'}`,
         },
       },
-      
+
       {
         type: 'divider',
       },
-      
+
       // Prompt content
       {
         type: 'section',
@@ -461,7 +464,7 @@ export const promptDetailView = (prompt: any): View => {
           text: `\`\`\`${prompt.content}\`\`\``,
         },
       },
-      
+
       // Tags if available
       ...(prompt.tags && prompt.tags.length > 0
         ? [
@@ -474,11 +477,11 @@ export const promptDetailView = (prompt: any): View => {
             } as KnownBlock,
           ]
         : []),
-      
+
       {
         type: 'divider',
       },
-      
+
       // Action buttons
       {
         type: 'actions',
@@ -508,5 +511,5 @@ export const promptDetailView = (prompt: any): View => {
         ],
       } as KnownBlock,
     ],
-  };
-};
+  }
+}

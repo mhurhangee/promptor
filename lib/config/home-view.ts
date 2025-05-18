@@ -86,14 +86,14 @@ export const homeView: HomeView = {
 
     // 4. Tips and Tricks section
     ...contextList(tips),
-    
+
     {
       type: 'divider',
     },
-    
+
     // 5. Prompt Library section
     ...contextList(promptLibrary),
-    
+
     // Prompt Library action buttons
     {
       type: 'actions',
