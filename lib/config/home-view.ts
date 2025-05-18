@@ -19,6 +19,7 @@ const features = {
     '📄 *File & image* support',
     '📸 *Voice* and *video* support',
     '🔁 *Follow-ups* to keep the conversation going',
+    '📚 *Prompt Library* for sharing and discovering useful prompts',
   ],
 }
 
@@ -29,6 +30,17 @@ const tips = {
     '📝 Be clear with your questions',
     '🔄 Ask follow-ups for more detail',
     '📋 Request lists for organized info',
+  ],
+}
+
+// 5. Prompt Library section
+const promptLibrary = {
+  title: '📚 *Prompt Library*',
+  items: [
+    '🔍 Browse and search community prompts',
+    '✏️ Create and share your own prompts',
+    '👍 Upvote helpful prompts',
+    '💾 Save prompts for later use',
   ],
 }
 
@@ -74,5 +86,38 @@ export const homeView: HomeView = {
 
     // 4. Tips and Tricks section
     ...contextList(tips),
+
+    {
+      type: 'divider',
+    },
+
+    // 5. Prompt Library section
+    ...contextList(promptLibrary),
+
+    // Prompt Library action buttons
+    {
+      type: 'actions',
+      elements: [
+        {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            text: 'Browse Prompts',
+            emoji: true,
+          },
+          action_id: 'open_prompt_library',
+          style: 'primary',
+        },
+        {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            text: 'Create New Prompt',
+            emoji: true,
+          },
+          action_id: 'create_prompt',
+        },
+      ],
+    },
   ],
 }
