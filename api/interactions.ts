@@ -28,8 +28,6 @@ export async function POST(request: Request) {
   try {
     interactionHandler(payload)
 
-    // Unhandled interaction type
-    console.warn(`Unhandled interaction type: ${payload.type}`)
     return new Response('OK', { status: 200 })
   } catch (error) {
     console.error('Error handling interaction:', error)
