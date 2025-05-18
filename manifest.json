@@ -13,7 +13,21 @@
     "bot_user": {
       "display_name": "Promptor",
       "always_online": true
-    }
+    },
+    "shortcuts": [
+      {
+        "name": "Browse Prompt Library",
+        "type": "global",
+        "callback_id": "browse_prompts",
+        "description": "Browse the community prompt library"
+      },
+      {
+        "name": "Create New Prompt",
+        "type": "global",
+        "callback_id": "create_prompt",
+        "description": "Add a new prompt to the library"
+      }
+    ]
   },
   "oauth_config": {
     "scopes": {
@@ -32,6 +46,10 @@
     "event_subscriptions": {
       "request_url": "https://your-deployed-app.vercel.app/api/events",
       "bot_events": ["app_home_opened", "assistant_thread_started", "message.im"]
+    },
+    "interactivity": {
+      "is_enabled": true,
+      "request_url": "https://your-deployed-app.vercel.app/api/interactions"
     },
     "org_deploy_enabled": false,
     "socket_mode_enabled": false,

@@ -9,6 +9,7 @@ import {
   handleAssistantThreadStarted,
   handleHome,
   handleNewAssistantMessage,
+  handlePromptCommand,
   isAssistantMessage,
 } from '../events'
 
@@ -25,6 +26,13 @@ export const eventHandler = (slackEvent: SlackEvent) => {
 
   // Handle new assistant message
   if (isAssistantMessage(slackEvent)) {
-    waitUntil(handleNewAssistantMessage(slackEvent as GenericMessageEvent))
+    const messageEvent = slackEvent as GenericMessageEvent;
+    
+    // Check if it's a prompt command
+    if (messageEvent.text?.startsWith('/prompts')) {
+      waitUntil(handlePromptCommand(messageEvent));
+    } else {
+      waitUntil(handleNewAssistantMessage(messageEvent));
+    }
   }
 }
