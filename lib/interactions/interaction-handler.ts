@@ -1,3 +1,4 @@
+import type { SlackViewResponse } from './submissions/view-submission-handler'
 import type { SlackBlockAction, SlackShortcut, SlackViewSubmission } from './types'
 
 import { blockActionHandler } from './block-actions/block-action-handler'
@@ -8,11 +9,11 @@ import { viewSubmissionHandler } from './submissions/view-submission-handler'
  * Handles all types of Slack interactions
  *
  * @param payload - The Slack interaction payload
- * @returns Promise that resolves when processing is complete
+ * @returns Promise that resolves when processing is complete, or returns a response for view submissions
  */
 export const interactionHandler = async (
   payload: SlackShortcut | SlackViewSubmission | SlackBlockAction
-): Promise<void> => {
+): Promise<SlackViewResponse | null | undefined> => {
   try {
     // Handle shortcuts (global or message actions)
     if (payload.type === 'shortcut' || payload.type === 'message_action') {
@@ -22,8 +23,10 @@ export const interactionHandler = async (
 
     // Handle view submissions
     if (payload.type === 'view_submission') {
-      await viewSubmissionHandler(payload)
-      return
+      // View submissions need to return a response to Slack
+      const response = await viewSubmissionHandler(payload)
+      // Return the response to the API endpoint
+      return response
     }
 
     // Handle block actions

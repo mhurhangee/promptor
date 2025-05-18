@@ -2,6 +2,7 @@
  * Utility function for handling prompt library actions with error handling
  */
 
+import { waitUntil } from '@vercel/functions'
 import { client } from '../../slack/client'
 import type { SlackBlockAction } from '../types'
 
@@ -16,16 +17,19 @@ export async function handlePromptLibraryAction(
   handler: () => Promise<void>
 ): Promise<void> {
   try {
-    await handler()
+    // Use waitUntil to handle async operations after the response is sent
+    waitUntil(handler())
   } catch (error) {
     console.error('Error handling prompt library action:', error)
 
     // Send error message to user if possible
     try {
-      await client.chat.postMessage({
-        channel: payload.user.id,
-        text: 'Sorry, there was an error processing your request. Please try again later.',
-      })
+      waitUntil(
+        client.chat.postMessage({
+          channel: payload.user.id,
+          text: 'Sorry, there was an error processing your request. Please try again later.',
+        })
+      )
     } catch (dmError) {
       console.error('Error sending error message:', dmError)
     }

@@ -95,26 +95,6 @@ export const browsePromptsView = (prompts: Prompt[] = [], category?: string): Vi
         },
       },
 
-      // Search input
-      {
-        type: 'input',
-        block_id: 'search_block',
-        optional: true,
-        element: {
-          type: 'plain_text_input',
-          action_id: 'search_input',
-          placeholder: {
-            type: 'plain_text',
-            text: 'Search prompts...',
-          },
-        },
-        label: {
-          type: 'plain_text',
-          text: 'Search',
-          emoji: true,
-        },
-      },
-
       // Category filter
       {
         type: 'input',

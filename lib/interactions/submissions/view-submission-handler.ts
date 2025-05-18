@@ -9,7 +9,7 @@ import { handlePromptLibrarySubmission } from './prompt-library-submission'
 /**
  * Response for a Slack view submission
  */
-interface SlackViewResponse {
+export interface SlackViewResponse {
   response_action?: string
   errors?: Record<string, string>
 }
@@ -20,7 +20,9 @@ interface SlackViewResponse {
  * @param payload - The Slack view submission payload
  * @returns Promise that resolves when processing is complete
  */
-export const viewSubmissionHandler = async (payload: SlackViewSubmission): Promise<void> => {
+export const viewSubmissionHandler = async (
+  payload: SlackViewSubmission
+): Promise<SlackViewResponse | null> => {
   const { view } = payload
   let response: SlackViewResponse | null = null
 
@@ -49,12 +51,16 @@ export const viewSubmissionHandler = async (payload: SlackViewSubmission): Promi
     }
   }
 
-  // If we have a response, we need to send it back to Slack
-  // This would typically be handled by the Slack API client
+  // For view submissions, Slack expects a response in the HTTP response
+  // This is different from other interaction types
   if (response) {
-    // For view submissions, Slack expects a response in the HTTP response
-    // This is different from other interaction types
-    // The interaction handler will need to be updated to handle this case
     console.log('View submission response:', response)
+
+    // We need to return the response to the interaction handler
+    // The interaction handler will pass this response back to Slack
+    return response
   }
+
+  // Return null if no response was generated
+  return null
 }

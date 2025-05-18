@@ -30,10 +30,26 @@ export async function POST(request: Request) {
 
   // Handle different interaction types
   try {
-    // Immediately respond to Slack to meet the 3-second requirement
-    // Then process the interaction asynchronously using waitUntil
-    waitUntil(interactionHandler(payload))
+    // Special handling for view submissions which require a response
+    if (payload.type === 'view_submission') {
+      // For view submissions, we need to return the response from the handler
+      // This is because Slack expects a response for form validations
+      const response = await interactionHandler(payload)
 
+      // If we have a response (e.g., validation errors), return it
+      if (response) {
+        return new Response(JSON.stringify(response), {
+          headers: { 'Content-Type': 'application/json' },
+          status: 200,
+        })
+      }
+
+      // Otherwise return an empty success response
+      return new Response('', { status: 200 })
+    }
+
+    // For all other interaction types, respond immediately and process asynchronously
+    waitUntil(interactionHandler(payload))
     return new Response('OK', { status: 200 })
   } catch (error) {
     console.error('Error handling interaction:', error)
