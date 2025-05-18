@@ -24,6 +24,9 @@ export async function POST(request: Request) {
   // Verify Slack request
   await verifyRequest({ requestType: 'interactive', request, rawBody })
 
+  // Log the payload for debugging
+  console.log('Interaction payload:', payload)
+
   // Handle different interaction types
   try {
     interactionHandler(payload)
