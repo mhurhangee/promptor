@@ -14,10 +14,30 @@ import { handlePromptLibraryAction } from './handle-prompt-library-action'
  */
 export async function handleCreatePrompt(payload: SlackBlockAction): Promise<void> {
   await handlePromptLibraryAction(payload, async () => {
-    // Open create prompt modal
-    await client.views.open({
-      trigger_id: payload.trigger_id,
-      view: createPromptView,
-    })
+    // Log the payload for debugging
+    console.log(
+      'Create prompt payload:',
+      JSON.stringify(
+        {
+          trigger_id: payload.trigger_id,
+          user: payload.user.id,
+        },
+        null,
+        2
+      )
+    )
+
+    try {
+      // Open create prompt modal
+      console.log('Opening create prompt modal with trigger_id:', payload.trigger_id)
+      await client.views.open({
+        trigger_id: payload.trigger_id,
+        view: createPromptView,
+      })
+      console.log('Successfully opened create prompt modal')
+    } catch (error) {
+      console.error('Error opening create prompt modal:', error)
+      throw error
+    }
   })
 }

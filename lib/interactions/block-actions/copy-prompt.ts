@@ -19,22 +19,42 @@ export async function handleCopyPrompt(
   action: SlackAction
 ): Promise<void> {
   await handlePromptLibraryAction(payload, async () => {
+    // Log the action for debugging
+    console.log('Copy prompt action:', JSON.stringify(action, null, 2))
+    console.log('User ID:', payload.user.id)
+
     // Get prompt ID from button value
     if (!action.value) {
+      console.error('Prompt ID is missing in action:', action)
       throw new Error('Prompt ID is missing')
     }
+
     const promptId = Number.parseInt(action.value)
+    console.log('Copying prompt with ID:', promptId)
 
-    // Get prompt
-    const prompt = await getPromptById(promptId)
-    if (!prompt) {
-      throw new Error(`Prompt with ID ${promptId} not found`)
+    try {
+      // Get prompt
+      const prompt = await getPromptById(promptId)
+      if (!prompt) {
+        console.error(`Prompt with ID ${promptId} not found`)
+        throw new Error(`Prompt with ID ${promptId} not found`)
+      }
+
+      console.log('Found prompt to copy:', {
+        id: prompt.id,
+        title: prompt.title,
+      })
+
+      // Send prompt content to user as DM
+      console.log('Sending prompt content to user as DM')
+      await client.chat.postMessage({
+        channel: payload.user.id,
+        text: `Here's the prompt you requested:\n\n*${prompt.title}*\n\n\`\`\`\n${prompt.content}\n\`\`\``,
+      })
+      console.log('Successfully sent prompt content to user')
+    } catch (error) {
+      console.error('Error in copy prompt handler:', error)
+      throw error
     }
-
-    // Send prompt content to user as DM
-    await client.chat.postMessage({
-      channel: payload.user.id,
-      text: `Here's the prompt you requested:\n\n*${prompt.title}*\n\n\`\`\`\n${prompt.content}\n\`\`\``,
-    })
   })
 }

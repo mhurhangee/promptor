@@ -19,6 +19,9 @@ export async function handleSearchPrompts(payload: SlackBlockAction): Promise<vo
       throw new Error('View state is missing')
     }
 
+    // Log the entire payload for debugging
+    console.log('Search payload:', JSON.stringify(payload, null, 2))
+
     // Get search query and category from view state
     const searchInput = payload.view.state.values.search_block?.search_input as
       | SlackViewStateValue
@@ -31,23 +34,36 @@ export async function handleSearchPrompts(payload: SlackBlockAction): Promise<vo
     const categoryOption = categorySelect?.selected_option
     const category = categoryOption?.value !== 'all' ? categoryOption?.value : undefined
 
+    console.log('Search query:', searchQuery)
+    console.log('Category:', category)
+
     let prompts = []
 
-    // Search based on query or category
-    if (searchQuery && searchQuery.trim() !== '') {
-      prompts = await searchPrompts(searchQuery)
-    } else if (category) {
-      prompts = await getAllPrompts(category)
-    } else {
-      prompts = await getAllPrompts()
-    }
+    try {
+      // Search based on query or category
+      if (searchQuery && searchQuery.trim() !== '') {
+        console.log('Searching for prompts with query:', searchQuery)
+        prompts = await searchPrompts(searchQuery)
+      } else if (category) {
+        console.log('Filtering prompts by category:', category)
+        prompts = await getAllPrompts(category)
+      } else {
+        console.log('Getting all prompts')
+        prompts = await getAllPrompts()
+      }
 
-    // Update the view with search results
-    if (payload.view?.id) {
-      await client.views.update({
-        view_id: payload.view.id,
-        view: browsePromptsView(prompts, category),
-      })
+      console.log('Found prompts:', prompts.length)
+
+      // Update the view with search results
+      if (payload.view?.id) {
+        await client.views.update({
+          view_id: payload.view.id,
+          view: browsePromptsView(prompts, category),
+        })
+      }
+    } catch (error) {
+      console.error('Error searching prompts:', error)
+      throw error
     }
   })
 }
