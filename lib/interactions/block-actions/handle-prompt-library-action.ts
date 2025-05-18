@@ -17,8 +17,8 @@ export async function handlePromptLibraryAction(
   handler: () => Promise<void>
 ): Promise<void> {
   try {
-    // Use waitUntil to handle async operations after the response is sent
-    waitUntil(handler())
+    // Execute the handler directly - modal opening needs to happen before we return
+    await handler()
   } catch (error) {
     console.error('Error handling prompt library action:', error)
 

@@ -32,7 +32,8 @@ export const interactionHandler = async (
     // Handle block actions
     if (payload.type === 'block_actions') {
       // Use the block action handler to route the action
-      blockActionHandler(payload)
+      // Block action handler is now async, so we need to await it
+      await blockActionHandler(payload)
       return
     }
 

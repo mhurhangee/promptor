@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
   // Handle different interaction types
   try {
-    // Special handling for view submissions which require a response
+    // Special handling for different interaction types
     if (payload.type === 'view_submission') {
       // For view submissions, we need to return the response from the handler
       // This is because Slack expects a response for form validations
@@ -48,6 +48,12 @@ export async function POST(request: Request) {
       return new Response('', { status: 200 })
     }
 
+    if (payload.type === 'block_actions') {
+      // For block actions that open modals, we need to execute them directly
+      // This ensures modals open properly before we respond to Slack
+      await interactionHandler(payload)
+      return new Response('OK', { status: 200 })
+    }
     // For all other interaction types, respond immediately and process asynchronously
     waitUntil(interactionHandler(payload))
     return new Response('OK', { status: 200 })
