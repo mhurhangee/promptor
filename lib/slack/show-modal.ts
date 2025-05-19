@@ -2,15 +2,16 @@ import type { ModalView } from '@slack/web-api'
 import { client } from './client'
 
 /**
- * Opens a modal view for a user
- * Used for shortcuts and block actions
+ * Simple utility to show a modal to a user
+ * Handles error logging and provides a clean interface
  */
-export const openModal = async (triggerId: string, view: ModalView): Promise<void> => {
+export const showModal = async (triggerId: string, view: ModalView): Promise<void> => {
   try {
     await client.views.open({
       trigger_id: triggerId,
       view,
     })
+    console.log('Successfully opened modal')
   } catch (error) {
     console.error(`Error opening modal: ${error}`)
   }

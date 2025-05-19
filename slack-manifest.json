@@ -20,12 +20,6 @@
         "type": "global",
         "callback_id": "create_prompt",
         "description": "Create a new prompt for your library"
-      },
-      {
-        "name": "View Prompt Library",
-        "type": "global",
-        "callback_id": "view_prompt_library",
-        "description": "View your saved prompts"
       }
     ],
     "slash_commands": [

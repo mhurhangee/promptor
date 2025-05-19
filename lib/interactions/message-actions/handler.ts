@@ -1,5 +1,5 @@
 import { createPromptModal } from '../../config/views'
-import { openModal } from '../../slack'
+import { showModal } from '../../slack'
 import type { MessageActionPayload, SlackInteractionPayload } from '../types'
 
 /**
@@ -61,7 +61,7 @@ const handleSaveAsPrompt = (triggerId: string, messageText: string): undefined =
   }
 
   // Open the modal with pre-filled text
-  openModal(triggerId, prefilledModal)
+  showModal(triggerId, prefilledModal)
 
   return undefined
 }

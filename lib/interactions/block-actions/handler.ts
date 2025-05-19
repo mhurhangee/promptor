@@ -1,5 +1,4 @@
-import { examplePrompts } from '../../config'
-import { createPromptModal, promptLibraryModal } from '../../config/views'
+import { createPromptModal } from '../../config/views'
 import { showModal } from '../../slack'
 import { client } from '../../slack/client'
 import type { Action, BlockActionsPayload, SlackInteractionPayload } from '../types'
@@ -34,17 +33,9 @@ export const handleBlockActions = (payload: BlockActionsPayload): object | undef
     const { action_id } = action
     console.log(`Processing block action: ${action_id}`)
 
-    // Get container information to determine if we're in a modal
-    const container = payload.container || { type: 'unknown' }
-    console.log(`Action container type: ${container.type}`)
-
     // Handle different block actions based on action_id
     if (action_id === 'create_prompt_button' || action_id === 'home_create_prompt_button') {
-      return handleCreatePromptButton(trigger_id, container)
-    }
-
-    if (action_id === 'home_view_library_button') {
-      return handleViewLibraryButton(trigger_id)
+      return handleCreatePromptButton(trigger_id)
     }
 
     if (action_id.startsWith('use_prompt_')) {
@@ -68,33 +59,10 @@ export const handleBlockActions = (payload: BlockActionsPayload): object | undef
  * Handle the create prompt button click
  * Opens the create prompt modal
  * @param triggerId The trigger ID for the interaction
- * @param container The container information for the interaction
  */
-const handleCreatePromptButton = (
-  triggerId: string,
-  container: BlockActionsPayload['container']
-): undefined => {
-  console.log(`Opening create prompt modal from button click with trigger_id: ${triggerId}`)
-
-  // Use our unified modal utility which automatically handles
-  // the appropriate method (open or push) based on the context
+const handleCreatePromptButton = (triggerId: string): undefined => {
+  // Open the create prompt modal
   showModal(triggerId, createPromptModal)
-
-  return undefined
-}
-
-/**
- * Handle the view prompt library button click
- * Opens the prompt library modal
- */
-const handleViewLibraryButton = (triggerId: string): undefined => {
-  console.log(`Opening prompt library modal with trigger_id: ${triggerId}`)
-
-  // In a real implementation, you would fetch prompts from a database
-  // For this example, we use the centralized example data
-
-  // Open the prompt library modal with the example prompts
-  showModal(triggerId, promptLibraryModal(examplePrompts))
 
   return undefined
 }
