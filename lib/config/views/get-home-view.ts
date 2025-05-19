@@ -37,6 +37,40 @@ const generatePromptBlocks = (prompts: Prompt[]) => {
       },
     },
     {
+      type: 'actions',
+      elements: [
+        {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            text: '🗑️ Delete',
+            emoji: true,
+          },
+          value: prompt.id.toString(),
+          action_id: `delete_prompt_${prompt.id}`,
+          style: 'danger',
+          confirm: {
+            title: {
+              type: 'plain_text',
+              text: 'Delete Prompt',
+            },
+            text: {
+              type: 'plain_text',
+              text: `Are you sure you want to delete "${prompt.title}"?`,
+            },
+            confirm: {
+              type: 'plain_text',
+              text: 'Delete',
+            },
+            deny: {
+              type: 'plain_text',
+              text: 'Cancel',
+            },
+          },
+        },
+      ],
+    },
+    {
       type: 'context',
       elements: [
         {

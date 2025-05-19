@@ -1,6 +1,6 @@
 import { createPromptModal } from '../../config/views'
-import { getPromptById } from '../../db'
-import { showModal } from '../../slack'
+import { deletePrompt, getPromptById } from '../../db'
+import { publishView, showModal } from '../../slack'
 import { client } from '../../slack/client'
 import type { Action, BlockActionsPayload, SlackInteractionPayload } from '../types'
 
@@ -46,6 +46,15 @@ export const handleBlockActions = (payload: BlockActionsPayload): object | undef
         return undefined
       }
       return handleUsePromptButton(action, user.id)
+    }
+
+    if (action_id.startsWith('delete_prompt_')) {
+      // Make sure user.id is available
+      if (!user || !user.id) {
+        console.error('User ID not available for delete prompt action')
+        return undefined
+      }
+      return handleDeletePromptButton(action, user.id)
     }
 
     // Log unhandled action
@@ -119,4 +128,32 @@ const handleUsePromptButton = async (action: Action, userId: string): Promise<un
   }
 
   return undefined
+}
+
+/**
+ * Handle the delete prompt button click
+ * Deletes the prompt from the database and refreshes the home view
+ */
+const handleDeletePromptButton = async (action: Action, userId: string): Promise<undefined> => {
+  try {
+    // Extract the prompt ID from the action_id (format: delete_prompt_<id>)
+    const promptId = Number.parseInt(action.action_id.replace('delete_prompt_', ''), 10)
+
+    if (Number.isNaN(promptId)) {
+      throw new Error(`Invalid prompt ID: ${action.action_id}`)
+    }
+
+    console.log(`User ${userId} is deleting prompt ${promptId}`)
+
+    // Delete the prompt from the database
+    await deletePrompt(promptId)
+
+    // Refresh the home view to reflect the deletion
+    await publishView(userId)
+
+    return undefined
+  } catch (error) {
+    console.error(`Error deleting prompt: ${error}`)
+    return undefined
+  }
 }
