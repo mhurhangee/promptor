@@ -1,5 +1,6 @@
+import { examplePrompts } from '../../config'
 import { createPromptModal, promptLibraryModal } from '../../config/views'
-import { openModal } from '../../slack'
+import { showModal } from '../../slack'
 import type { GlobalShortcutPayload, SlackInteractionPayload } from '../types'
 
 /**
@@ -45,7 +46,7 @@ const handleCreatePromptShortcut = (triggerId: string): undefined => {
   console.log(`Opening create prompt modal with trigger_id: ${triggerId}`)
 
   // Open the create prompt modal using the trigger_id
-  openModal(triggerId, createPromptModal)
+  showModal(triggerId, createPromptModal)
 
   return undefined
 }
@@ -57,23 +58,11 @@ const handleCreatePromptShortcut = (triggerId: string): undefined => {
 const handleViewPromptLibraryShortcut = (triggerId: string): undefined => {
   console.log(`Opening prompt library with trigger_id: ${triggerId}`)
 
-  // For this example, we'll use dummy data
-  // In a real app, you would fetch this from a database
-  const examplePrompts = [
-    {
-      id: 'prompt1',
-      title: 'Explain a Concept',
-      text: 'Explain [concept] in simple terms as if I were a beginner.',
-    },
-    {
-      id: 'prompt2',
-      title: 'Code Review',
-      text: 'Review this code and suggest improvements: [code]',
-    },
-  ]
+  // In a real implementation, you would fetch prompts from a database
+  // For this example, we use the centralized example data
 
   // Open the prompt library modal with the example prompts
-  openModal(triggerId, promptLibraryModal(examplePrompts))
+  showModal(triggerId, promptLibraryModal(examplePrompts))
 
   return undefined
 }
