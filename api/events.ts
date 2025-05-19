@@ -16,12 +16,14 @@ export async function POST(request: Request) {
   // Verify slack request
   await verifyRequest({ requestType, request, rawBody })
 
-  // Handle event
+  // Handle event asynchronously
   try {
-    eventHandler(payload.event)
+    // We need to await the event handler for the home view
+    // but we don't want to block the response for other events
+    await eventHandler(payload.event)
     return new Response('Success!', { status: 200 })
   } catch (error) {
-    console.error('Error generating response', error)
-    return new Response('Error generating response', { status: 500 })
+    console.error('Error handling event', error)
+    return new Response('Error handling event', { status: 500 })
   }
 }

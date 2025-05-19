@@ -1,4 +1,5 @@
 import { createPromptModal } from '../../config/views'
+import { getPromptById } from '../../db'
 import { showModal } from '../../slack'
 import { client } from '../../slack/client'
 import type { Action, BlockActionsPayload, SlackInteractionPayload } from '../types'
@@ -74,14 +75,20 @@ const handleCreatePromptButton = (triggerId: string): undefined => {
 const handleUsePromptButton = async (action: Action, userId: string): Promise<undefined> => {
   try {
     // Extract the prompt ID from the action_id (format: use_prompt_<id>)
-    const promptId = action.action_id.replace('use_prompt_', '')
-    const promptValue = action.value
+    const promptId = Number.parseInt(action.action_id.replace('use_prompt_', ''), 10)
 
-    console.log(`User ${userId} wants to use prompt ${promptId} with value ${promptValue}`)
+    if (Number.isNaN(promptId)) {
+      throw new Error(`Invalid prompt ID: ${action.action_id}`)
+    }
 
-    // In a real implementation, you would fetch the prompt from a database
-    // For this example, we'll use a mock prompt based on the ID
-    const mockPromptText = `This is the content of prompt ${promptId}. In a real implementation, this would be fetched from a database.`
+    console.log(`User ${userId} wants to use prompt ${promptId}`)
+
+    // Fetch the prompt from the database
+    const prompt = await getPromptById(promptId)
+
+    if (!prompt) {
+      throw new Error(`Prompt not found with ID: ${promptId}`)
+    }
 
     // First, open a DM with the user
     const conversationResponse = await client.conversations.open({
@@ -92,10 +99,13 @@ const handleUsePromptButton = async (action: Action, userId: string): Promise<un
       throw new Error('Failed to open DM channel')
     }
 
-    // Then send the prompt to the DM channel
+    // Format the message with the prompt content
+    const message = `*${prompt.title}*\n\n${prompt.content}`
+
+    // Send the prompt to the DM channel
     const messageResponse = await client.chat.postMessage({
       channel: conversationResponse.channel.id,
-      text: mockPromptText,
+      text: message,
       mrkdwn: true,
     })
 

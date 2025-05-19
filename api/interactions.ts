@@ -45,8 +45,8 @@ export async function POST(request: Request): Promise<Response> {
       return new Response('Invalid payload format', { status: 400 })
     }
 
-    // Handle the interaction
-    const result = interactionHandler(payload)
+    // Handle the interaction asynchronously
+    const result = await interactionHandler(payload)
 
     // If the handler returns a response (like for view_submission), use it
     if (result && typeof result === 'object') {
@@ -55,8 +55,8 @@ export async function POST(request: Request): Promise<Response> {
       })
     }
 
-    // For async operations that don't need immediate response
-    waitUntil(Promise.resolve(result))
+    // For any background tasks that don't need immediate response
+    // We don't need to use waitUntil here since we're already awaiting the result
 
     // Return a 200 OK for Slack
     return new Response('', { status: 200 })

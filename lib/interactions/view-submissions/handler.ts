@@ -1,3 +1,5 @@
+import { createPrompt } from '../../db'
+import { publishView } from '../../slack'
 import type { SlackInteractionPayload, ViewState, ViewSubmissionPayload } from '../types'
 
 /**
@@ -12,27 +14,40 @@ export function isViewSubmission(
 /**
  * Handle view submissions (modal form submissions)
  */
-export const handleViewSubmission = (payload: ViewSubmissionPayload): object => {
+export const handleViewSubmission = async (payload: ViewSubmissionPayload): Promise<object> => {
   const { view, user } = payload
   const { callback_id } = view
 
   console.log(`Processing view submission: ${callback_id}`)
 
-  // Handle different view submissions based on callback_id
-  switch (callback_id) {
-    case 'create_prompt_modal':
-      return handleCreatePromptSubmission(view.state, user.id)
-    default:
-      console.log(`Unhandled view submission: ${callback_id}`)
-      return {}
+  try {
+    // Handle different view submissions based on callback_id
+    switch (callback_id) {
+      case 'create_prompt_modal':
+        return await handleCreatePromptSubmission(view.state, user.id)
+      default:
+        console.log(`Unhandled view submission: ${callback_id}`)
+        return {}
+    }
+  } catch (error) {
+    console.error(`Error handling view submission: ${error}`)
+    return {
+      response_action: 'errors',
+      errors: {
+        prompt_title_block: 'An error occurred while processing your submission',
+      },
+    }
   }
 }
 
 /**
  * Handle the create prompt modal submission
- * Processes the form data and saves the prompt
+ * Processes the form data and saves the prompt to the database
  */
-const handleCreatePromptSubmission = (state: ViewState | undefined, userId: string): object => {
+const handleCreatePromptSubmission = async (
+  state: ViewState | undefined,
+  userId: string
+): Promise<object> => {
   if (!state || !state.values) {
     console.error('No state values in view submission')
     return { response_action: 'errors', errors: { prompt_title_block: 'Missing form data' } }
@@ -65,10 +80,18 @@ const handleCreatePromptSubmission = (state: ViewState | undefined, userId: stri
       }
     }
 
-    // In a real implementation, you would save the prompt to a database
-    console.log(`Saving prompt for user ${userId}:`)
-    console.log(`Title: ${title}`)
-    console.log(`Text: ${text}`)
+    // Save the prompt to the database
+    await createPrompt({
+      title,
+      content: text,
+      createdBy: userId,
+      // Optional fields can be added if provided in the form
+      description: null,
+      category: null,
+    })
+
+    // Refresh the home view to show the new prompt
+    await publishView(userId)
 
     // Return a success message
     return {

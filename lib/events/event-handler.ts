@@ -12,19 +12,27 @@ import {
   isAssistantMessage,
 } from '../events'
 
-export const eventHandler = (slackEvent: SlackEvent) => {
-  // Handle app home opened
-  if (slackEvent.type === 'app_home_opened') {
-    waitUntil(handleHome(slackEvent as AppHomeOpenedEvent))
-  }
+export const eventHandler = async (slackEvent: SlackEvent): Promise<void> => {
+  try {
+    // Handle app home opened
+    if (slackEvent.type === 'app_home_opened') {
+      // We can directly await this since we need the home view to load quickly
+      await handleHome(slackEvent as AppHomeOpenedEvent)
+    }
 
-  // Handle assistant thread started
-  if (slackEvent.type === 'assistant_thread_started') {
-    waitUntil(handleAssistantThreadStarted(slackEvent as AssistantThreadStartedEvent))
-  }
+    // For other event types, we can use waitUntil to handle them asynchronously
+    // since they don't need to block the response
 
-  // Handle new assistant message
-  if (isAssistantMessage(slackEvent)) {
-    waitUntil(handleNewAssistantMessage(slackEvent as GenericMessageEvent))
+    // Handle assistant thread started
+    if (slackEvent.type === 'assistant_thread_started') {
+      waitUntil(handleAssistantThreadStarted(slackEvent as AssistantThreadStartedEvent))
+    }
+
+    // Handle new assistant message
+    if (isAssistantMessage(slackEvent)) {
+      waitUntil(handleNewAssistantMessage(slackEvent as GenericMessageEvent))
+    }
+  } catch (error) {
+    console.error(`Error handling event: ${error}`)
   }
 }
