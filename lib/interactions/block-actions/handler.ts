@@ -1,4 +1,4 @@
-import { createPromptModal } from '../../config/views'
+import { createPromptModal, getEditPromptModal } from '../../config/views'
 import { deletePrompt, getPromptById } from '../../db'
 import { publishView, showModal } from '../../slack'
 import { client } from '../../slack/client'
@@ -46,6 +46,15 @@ export const handleBlockActions = (payload: BlockActionsPayload): object | undef
         return undefined
       }
       return handleUsePromptButton(action, user.id)
+    }
+
+    if (action_id.startsWith('edit_prompt_')) {
+      // Make sure trigger_id is available for opening the modal
+      if (!trigger_id) {
+        console.error('No trigger_id available for edit prompt action')
+        return undefined
+      }
+      return handleEditPromptButton(action, trigger_id)
     }
 
     if (action_id.startsWith('delete_prompt_')) {
@@ -154,6 +163,41 @@ const handleDeletePromptButton = async (action: Action, userId: string): Promise
     return undefined
   } catch (error) {
     console.error(`Error deleting prompt: ${error}`)
+    return undefined
+  }
+}
+
+/**
+ * Handle the edit prompt button click
+ * Opens the edit prompt modal with the existing prompt data
+ */
+const handleEditPromptButton = async (action: Action, triggerId: string): Promise<undefined> => {
+  try {
+    // Extract the prompt ID from the action_id (format: edit_prompt_<id>)
+    const promptId = Number.parseInt(action.action_id.replace('edit_prompt_', ''), 10)
+
+    if (Number.isNaN(promptId)) {
+      throw new Error(`Invalid prompt ID: ${action.action_id}`)
+    }
+
+    console.log(`Opening edit modal for prompt ${promptId}`)
+
+    // Fetch the prompt from the database
+    const prompt = await getPromptById(promptId)
+
+    if (!prompt) {
+      throw new Error(`Prompt not found with ID: ${promptId}`)
+    }
+
+    // Create the edit modal with the existing prompt data
+    const editModal = getEditPromptModal(prompt)
+
+    // Open the edit modal
+    showModal(triggerId, editModal)
+
+    return undefined
+  } catch (error) {
+    console.error(`Error opening edit prompt modal: ${error}`)
     return undefined
   }
 }

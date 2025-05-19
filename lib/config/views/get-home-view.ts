@@ -43,6 +43,16 @@ const generatePromptBlocks = (prompts: Prompt[]) => {
           type: 'button',
           text: {
             type: 'plain_text',
+            text: '✏️ Edit',
+            emoji: true,
+          },
+          value: prompt.id.toString(),
+          action_id: `edit_prompt_${prompt.id}`,
+        },
+        {
+          type: 'button',
+          text: {
+            type: 'plain_text',
             text: '🗑️ Delete',
             emoji: true,
           },
