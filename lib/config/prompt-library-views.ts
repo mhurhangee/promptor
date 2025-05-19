@@ -144,18 +144,8 @@ export const browsePromptsView = (prompts: Prompt[] = [], category?: string): Vi
       // Action buttons
       {
         type: 'actions',
-        block_id: 'prompt_search_actions',
+        block_id: 'prompt_library_actions',
         elements: [
-          {
-            type: 'button',
-            text: {
-              type: 'plain_text',
-              text: 'Search',
-              emoji: true,
-            },
-            action_id: 'search_prompts',
-            style: 'primary',
-          },
           {
             type: 'button',
             text: {
@@ -164,6 +154,7 @@ export const browsePromptsView = (prompts: Prompt[] = [], category?: string): Vi
               emoji: true,
             },
             action_id: 'create_prompt',
+            style: 'primary',
           },
         ],
       } as KnownBlock,
@@ -458,22 +449,12 @@ export const promptDetailView = (prompt: Prompt & { userHasUpvoted?: boolean }):
             type: 'button',
             text: {
               type: 'plain_text',
-              text: 'Copy to Clipboard',
+              text: 'Copy Prompt',
               emoji: true,
             },
             value: `${prompt.id}`,
             action_id: 'copy_prompt',
-          },
-          {
-            type: 'button',
-            text: {
-              type: 'plain_text',
-              text: prompt.userHasUpvoted ? 'Remove Upvote' : 'Upvote',
-              emoji: true,
-            },
-            value: `${prompt.id}`,
-            action_id: 'toggle_upvote',
-            style: prompt.userHasUpvoted ? 'danger' : 'primary',
+            style: 'primary',
           },
         ],
       } as KnownBlock,

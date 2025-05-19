@@ -29,8 +29,8 @@ export async function handleCreatePrompt(payload: SlackBlockAction): Promise<voi
     )
 
     try {
-      // Check if we're in a modal already (container.type === 'view')
-      if (payload.container.type === 'view') {
+      // Check if we're in a modal already (container exists and type is 'view')
+      if (payload.container && payload.container.type === 'view') {
         console.log(
           'Opening create prompt modal from existing modal with view_id:',
           payload.container.view_id

@@ -24,14 +24,17 @@ export async function handlePromptLibraryAction(
 
     // Send error message to user if possible
     try {
-      waitUntil(
-        client.chat.postMessage({
-          channel: payload.user.id,
-          text: 'Sorry, there was an error processing your request. Please try again later.',
-        })
-      )
+      // Use a normal await instead of waitUntil for error messages
+      // This ensures the user gets feedback about the error
+      await client.chat.postMessage({
+        channel: payload.user.id,
+        text: 'Sorry, there was an error processing your request. Please try again later.',
+      })
     } catch (dmError) {
       console.error('Error sending error message:', dmError)
     }
+
+    // Re-throw the error to ensure it's properly handled up the chain
+    throw error
   }
 }

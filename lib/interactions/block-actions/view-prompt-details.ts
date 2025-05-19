@@ -22,7 +22,7 @@ export async function handleViewPromptDetails(
     // Log the action for debugging
     console.log('View prompt details action:', JSON.stringify(action, null, 2))
     console.log('Payload trigger_id:', payload.trigger_id)
-    console.log('Container type:', payload.container.type)
+    console.log('Container type:', payload.container?.type || 'undefined')
 
     // Get prompt ID from button value
     if (!action.value) {
@@ -49,8 +49,8 @@ export async function handleViewPromptDetails(
         userHasUpvoted: false,
       }
 
-      // Check if we're in a modal already (container.type === 'view')
-      if (payload.container.type === 'view') {
+      // Check if we're in a modal already (container exists and type is 'view')
+      if (payload.container && payload.container.type === 'view') {
         console.log(
           'Opening prompt detail modal from existing modal with view_id:',
           payload.container.view_id
