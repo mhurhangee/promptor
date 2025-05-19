@@ -1,5 +1,5 @@
 import type { HomeView } from '@slack/web-api'
-import { contextList } from '../slack'
+import { contextList } from '../../slack'
 
 // 2. Quick Start section using contextList
 const quickStart = {
@@ -53,6 +53,33 @@ export const homeView: HomeView = {
         type: 'mrkdwn',
         text: 'Promptor is your friendly AI tutor in Slack. Get answers, explanations, and ideas—instantly.',
       },
+    },
+
+    // Prompt Library Actions
+    {
+      type: 'actions',
+      block_id: 'home_prompt_actions',
+      elements: [
+        {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            text: '✏️ Create Prompt',
+            emoji: true,
+          },
+          action_id: 'home_create_prompt_button',
+          style: 'primary',
+        },
+        {
+          type: 'button',
+          text: {
+            type: 'plain_text',
+            text: '📚 View Prompt Library',
+            emoji: true,
+          },
+          action_id: 'home_view_library_button',
+        },
+      ],
     },
     {
       type: 'divider',

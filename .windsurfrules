@@ -11,26 +11,21 @@
 - Uses TypeScript, Slack Web API, Vercel's AI SDK (and `@ai-sdk/openai`), and is deployed on Vercel
 - Modular, organized codebase with one feature/function per file
 
-## 2. Directory Structure
-- `api/` — API endpoints for Slack events
-- `config/` — App configuration (views, settings, prompts, branding, UI messages)
-- `lib/ai/` — AI logic (LLM calls, response generation)
-- `lib/events/` — Slack event handlers
-- `lib/slack/` — Slack utilities and helpers
-
-## 3. Coding Guidelines
+## 2. Coding Guidelines
 - Use clear function and variable names
-- Prefer async/await for async code
-- Use type annotations and interfaces
+- Use **TypeScript strictly**:
+    - Define all function inputs and outputs with proper type annotations
+    - Create and reuse interfaces/types instead of using any
+    - Avoid any; use unknown if absolutely necessary, and narrow it explicitly
 - Follow formatting and linting with Biome
 - Handle errors gracefully and informatively
 
-## 4. Documentation
+## 3. Documentation
 - Add concise comments to explain the purpose of each function and module
 - Add concise clarifying comments to explain the logic of each function
 - Keep README up to date
 
-## 5. General Rules
+## 4. General Rules
 - Maintain separation of concerns
 - Use environment variables for secrets
 - Prioritize user-friendly responses and error messages

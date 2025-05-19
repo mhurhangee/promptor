@@ -1,56 +1,46 @@
-import { waitUntil } from '@vercel/functions'
-import type { SlackShortcut, SlackViewSubmission } from './types'
-
-import { handleAiFormShortcut } from './shortcuts/ai-form-shortcut'
-// Import shortcut handlers
-import { handleByteShortcut } from './shortcuts/byte-shortcut'
-import { handleDinoFactShortcut } from './shortcuts/dino-fact-shortcut'
-
-import { handleAiFormSubmission } from './submissions/ai-form-submission'
-// Import submission handlers
-import { handleByteSubmission } from './submissions/byte-submission'
-import { handleDinoFactSubmission } from './submissions/dino-fact-submission'
+import { handleBlockActions, isBlockActions } from './block-actions/handler'
+import { handleMessageAction, isMessageAction } from './message-actions/handler'
+import { handleShortcut, isGlobalShortcut } from './shortcuts/handler'
+import type { SlackInteractionPayload } from './types'
+import { handleViewClosed, isViewClosed } from './view-closed/handler'
+import { handleViewSubmission, isViewSubmission } from './view-submissions/handler'
 
 /**
- * Routes shortcut interactions to the appropriate handler
+ * Main interaction handler for Slack interactive components
+ * Dispatches to appropriate handlers based on interaction type
  */
-export const shortcutHandler = (payload: SlackShortcut) => {
-  const { callback_id, trigger_id } = payload
+export const interactionHandler = (payload: SlackInteractionPayload): object | undefined => {
+  // Log interaction type for debugging
+  console.log(`Handling interaction type: ${payload.type}`)
 
-  switch (callback_id) {
-    case 'new_byte':
-      return waitUntil(handleByteShortcut(trigger_id))
-    case 'dino_fact':
-      return waitUntil(handleDinoFactShortcut(trigger_id))
-    case 'ai_form':
-      return waitUntil(handleAiFormShortcut(trigger_id))
-    default:
-      console.warn(`Unknown shortcut callback_id: ${callback_id}`)
-      return null
+  // Handle global shortcuts (triggered from search menu)
+  if (isGlobalShortcut(payload)) {
+    return handleShortcut(payload)
   }
-}
 
-/**
- * Routes view submission interactions to the appropriate handler
- */
-export const viewSubmissionHandler = async (payload: SlackViewSubmission) => {
-  const { view } = payload
-
-  switch (view.callback_id) {
-    case 'new_byte': {
-      const byteName = view.state.values.input_block.byte_name.value
-      return await handleByteSubmission(byteName)
-    }
-    case 'dino_fact': {
-      return await handleDinoFactSubmission()
-    }
-    case 'ai_form': {
-      const prompt = view.state.values.prompt_block.user_prompt.value
-      return await handleAiFormSubmission(prompt)
-    }
-    default: {
-      console.warn(`Unknown view submission callback_id: ${view.callback_id}`)
-      return null
-    }
+  // Handle message actions (triggered from message context menus)
+  if (isMessageAction(payload)) {
+    return handleMessageAction(payload)
   }
+
+  // Handle block actions (buttons, select menus, etc.)
+  if (isBlockActions(payload)) {
+    return handleBlockActions(payload)
+  }
+
+  // Handle view submissions (modal form submissions)
+  if (isViewSubmission(payload)) {
+    return handleViewSubmission(payload)
+  }
+
+  // Handle view closed events (modal closed without submission)
+  if (isViewClosed(payload)) {
+    return handleViewClosed(payload)
+  }
+
+  // At this point, TypeScript has narrowed payload to 'never' type since we've handled all known types
+  // We'll use a type assertion to safely log the type for debugging purposes
+  const unknownPayload = payload as { type: string }
+  console.warn(`Unhandled interaction type: ${unknownPayload.type || 'unknown'}`)
+  return undefined
 }

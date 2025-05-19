@@ -1,0 +1,72 @@
+{
+  "display_information": {
+    "name": "Promptor",
+    "description": "AI tutor bot for teaching users about AI via tutoring, interactive lessons, and feedback",
+    "background_color": "#4A154B"
+  },
+  "features": {
+    "app_home": {
+      "home_tab_enabled": true,
+      "messages_tab_enabled": true,
+      "messages_tab_read_only_enabled": false
+    },
+    "bot_user": {
+      "display_name": "Promptor",
+      "always_online": true
+    },
+    "shortcuts": [
+      {
+        "name": "Create Prompt",
+        "type": "global",
+        "callback_id": "create_prompt",
+        "description": "Create a new prompt for your library"
+      },
+      {
+        "name": "View Prompt Library",
+        "type": "global",
+        "callback_id": "view_prompt_library",
+        "description": "View your saved prompts"
+      }
+    ],
+    "slash_commands": [
+      {
+        "command": "/promptor",
+        "description": "Interact with Promptor",
+        "should_escape": false
+      }
+    ]
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": [
+        "app_mentions:read",
+        "channels:history",
+        "channels:read",
+        "chat:write",
+        "commands",
+        "files:read",
+        "groups:history",
+        "groups:read",
+        "im:history",
+        "im:read",
+        "im:write",
+        "mpim:history",
+        "mpim:read",
+        "users:read"
+      ]
+    }
+  },
+  "settings": {
+    "event_subscriptions": {
+      "request_url": "https://your-app-url.com/api/events",
+      "bot_events": ["app_home_opened", "app_mention", "message.im"]
+    },
+    "interactivity": {
+      "is_enabled": true,
+      "request_url": "https://your-app-url.com/api/interactions",
+      "message_menu_options_url": "https://your-app-url.com/api/options"
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false
+  }
+}
