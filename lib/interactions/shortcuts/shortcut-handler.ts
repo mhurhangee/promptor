@@ -5,7 +5,6 @@ import type { SlackShortcut } from '../types'
 import { handleAiFormShortcut } from './ai-form-shortcut'
 import { handleBrowsePromptsShortcut } from './browse-prompts-shortcut'
 import { handleByteShortcut } from './byte-shortcut'
-import { handleCreatePromptShortcut } from './create-prompt-shortcut'
 import { handleDinoFactShortcut } from './dino-fact-shortcut'
 
 /**
@@ -29,9 +28,6 @@ export const shortcutHandler = (payload: SlackShortcut): void => {
       break
     case 'browse_prompts':
       waitUntil(handleBrowsePromptsShortcut(trigger_id))
-      break
-    case 'create_prompt':
-      waitUntil(handleCreatePromptShortcut(trigger_id))
       break
     default:
       console.warn(`Unknown shortcut callback_id: ${callback_id}`)

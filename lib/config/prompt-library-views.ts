@@ -345,26 +345,6 @@ export const createPromptView: View = {
         emoji: true,
       },
     },
-
-    // Tags input
-    {
-      type: 'input',
-      block_id: 'tags_block',
-      optional: true,
-      element: {
-        type: 'plain_text_input',
-        action_id: 'tags_input',
-        placeholder: {
-          type: 'plain_text',
-          text: 'Enter tags separated by commas (e.g., writing, email, professional)',
-        },
-      },
-      label: {
-        type: 'plain_text',
-        text: 'Tags',
-        emoji: true,
-      },
-    },
   ],
 }
 

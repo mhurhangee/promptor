@@ -4,12 +4,7 @@
  */
 
 import { waitUntil } from '@vercel/functions'
-import {
-  handleCopyPrompt,
-  handleCreatePrompt,
-  handleOpenPromptLibrary,
-  handleViewPromptDetails,
-} from '.'
+import { handleCopyPrompt, handleOpenPromptLibrary, handleViewPromptDetails } from '.'
 import type { SlackAction, SlackBlockAction } from '../types'
 
 /**
@@ -29,11 +24,6 @@ export const blockActionHandler = async (payload: SlackBlockAction): Promise<voi
       case 'open_prompt_library':
         // For modal operations, execute directly without waitUntil
         await handleOpenPromptLibrary(payload)
-        break
-
-      case 'create_prompt':
-        // For modal operations, execute directly without waitUntil
-        await handleCreatePrompt(payload)
         break
 
       case 'view_prompt_details':

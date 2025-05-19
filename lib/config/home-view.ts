@@ -115,7 +115,7 @@ export const homeView: HomeView = {
             text: 'Create New Prompt',
             emoji: true,
           },
-          action_id: 'create_prompt',
+          action_id: 'modal:prompt_library_create',
         },
       ],
     },
