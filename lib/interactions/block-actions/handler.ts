@@ -1,5 +1,5 @@
 import { createPromptModal, promptLibraryModal } from '../../config/views'
-import { openModal } from '../../slack'
+import { openModal, pushModal } from '../../slack'
 import type { Action, BlockActionsPayload, SlackInteractionPayload } from '../types'
 
 /**
@@ -28,7 +28,7 @@ export const handleBlockActions = (payload: BlockActionsPayload): object | undef
 
     // Handle different block actions based on action_id
     if (action_id === 'create_prompt_button' || action_id === 'home_create_prompt_button') {
-      return handleCreatePromptButton(trigger_id)
+      return handleCreatePromptButton(trigger_id, payload.container)
     }
 
     if (action_id === 'home_view_library_button') {
@@ -50,12 +50,25 @@ export const handleBlockActions = (payload: BlockActionsPayload): object | undef
 /**
  * Handle the create prompt button click
  * Opens the create prompt modal
+ * @param triggerId The trigger ID for the interaction
+ * @param container The container information for the interaction
  */
-const handleCreatePromptButton = (triggerId: string): undefined => {
+const handleCreatePromptButton = (
+  triggerId: string,
+  container: BlockActionsPayload['container']
+): undefined => {
   console.log(`Opening create prompt modal from button click with trigger_id: ${triggerId}`)
 
-  // Open the create prompt modal
-  openModal(triggerId, createPromptModal)
+  // Check if the button was clicked from within a modal
+  // If it was, we need to use pushModal instead of openModal
+  if (container.type === 'view') {
+    console.log('Button clicked from within a modal, pushing new modal on top')
+    pushModal(triggerId, createPromptModal)
+  } else {
+    // Button was clicked from the home tab or a message
+    console.log('Button clicked from outside a modal, opening new modal')
+    openModal(triggerId, createPromptModal)
+  }
 
   return undefined
 }
@@ -99,10 +112,14 @@ const handleUsePromptButton = (action: Action, userId: string): undefined => {
 
   console.log(`User ${userId} wants to use prompt ${promptId} with value ${promptValue}`)
 
-  // In a real implementation, you would fetch the prompt from a database
-  // and then send it to the user's conversation
+  // In a real implementation, you would:
+  // 1. Fetch the prompt text from a database using the promptId
+  // 2. Open a DM with the user if one doesn't exist
+  // 3. Post the prompt text to the conversation
+
   // For this example, we'll just log a message
-  console.log(`Would send prompt ${promptId} to conversation`)
+  // In a real implementation, you would use client.chat.postMessage to send the prompt to the user
+  console.log(`Would send prompt ${promptId} to conversation with user ${userId}`)
 
   return undefined
 }
