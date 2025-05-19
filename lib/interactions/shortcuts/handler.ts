@@ -1,6 +1,5 @@
-import { createPromptModal } from '../../config/views'
-import { showModal } from '../../slack'
 import type { GlobalShortcutPayload, SlackInteractionPayload } from '../types'
+import { handleCreatePromptShortcut } from './create-prompt-shortcut'
 
 /**
  * Type guard for global shortcuts
@@ -13,6 +12,7 @@ export function isGlobalShortcut(
 
 /**
  * Handle global shortcuts triggered from the Slack search menu
+ * Routes to the appropriate handler based on the callback_id
  */
 export const handleShortcut = (payload: GlobalShortcutPayload): object | undefined => {
   const { callback_id, trigger_id } = payload
@@ -24,26 +24,13 @@ export const handleShortcut = (payload: GlobalShortcutPayload): object | undefin
     return undefined
   }
 
-  // Handle different shortcuts based on callback_id
+  // Route to the appropriate handler based on callback_id
   switch (callback_id) {
     case 'create_prompt':
       return handleCreatePromptShortcut(trigger_id)
     default:
       console.log(`Unhandled shortcut: ${callback_id}`)
   }
-
-  return undefined
-}
-
-/**
- * Handle the create prompt shortcut
- * Opens a modal for creating a new prompt
- */
-const handleCreatePromptShortcut = (triggerId: string): undefined => {
-  console.log(`Opening create prompt modal with trigger_id: ${triggerId}`)
-
-  // Open the create prompt modal using the trigger_id
-  showModal(triggerId, createPromptModal)
 
   return undefined
 }
